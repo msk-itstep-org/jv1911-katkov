@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class DemoController {
-    @GetMapping("/")
+    @GetMapping("/1")
     public String index(Model model, @RequestParam(defaultValue = "") String name) {
         model.addAttribute("name", name);
 
