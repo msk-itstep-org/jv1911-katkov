@@ -50,15 +50,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/profile").authenticated()
+                .antMatchers("/menu").permitAll()
+                .antMatchers("/denied").permitAll()
                 .anyRequest().authenticated();
 
         httpSecurity.csrf().disable();
 
         httpSecurity.formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/login?error=true")
+                .defaultSuccessUrl("/menu")
+                .failureUrl("/denied")
                 .usernameParameter("username")
                 .passwordParameter("password");
 

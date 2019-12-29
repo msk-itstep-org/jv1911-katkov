@@ -22,7 +22,7 @@ public class MenuController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @GetMapping("/profile")
+    @GetMapping("/menu")
     private String index(Model model, Principal principal) {
         if (principal != null) {
             User currentUser = userRepository.findByUsername(principal.getName());

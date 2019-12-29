@@ -18,8 +18,8 @@ INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('10', 'side_dis
 INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('11', 'sauses', '1', '/images/upload/sauses.jpg');
 INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('12', 'deserts', '1', '/images/upload/deserts.jpg');
 INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('13', 'hot_drinks', '1', '/images/upload/hotDrinks.jpg');
-INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('14', 'tea', '12', '/images/upload/tea.jpg');
-INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('15', 'coffee', '12', '/images/upload/coffee.jpg');
+INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('14', 'tea', '13', '/images/upload/tea.jpg');
+INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('15', 'coffee', '13', '/images/upload/coffee.jpg');
 INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('16', 'cold_drinks', '1', '/images/upload/coldDrinks.jpg');
 INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('17', 'beer', '2', '/images/upload/beer.jpg');
 INSERT INTO restaurant.menu (id, name, parent_id, image) VALUES ('18', 'vodka', '2', '/images/upload/vodka.jpg');
