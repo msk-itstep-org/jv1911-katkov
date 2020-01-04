@@ -32,7 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         String userQuery = "SELECT username, password, 1 AS active FROM users WHERE username is ?";
         String roleQuery = "SELECT u.username, r.role "
                 + "FROM users u "
-                + "INNER JOIN users_roles ur ON ue.user_id = u.id "
+                + "INNER JOIN users_roles ur ON ur.user_id = u.id "
                 + "INNER JOIN roles r ON r.id = "
                 + "ur.role_id "
                 + "WHERE username = ?";
@@ -52,7 +52,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/menu").permitAll()
                 .antMatchers("/denied").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/").permitAll();
+//                .anyRequest().authenticated();
 
         httpSecurity.csrf().disable();
 

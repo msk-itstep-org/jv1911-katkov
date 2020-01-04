@@ -36,6 +36,11 @@ public class MenuController {
         return "menu";
     }
 
+    @GetMapping("/menu/salads")
+    private String salads() {
+        return "/menu/salads";
+    }
+
 
 //    @GetMapping("/")
 //    public String index(Model model) {

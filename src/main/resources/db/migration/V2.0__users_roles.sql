@@ -18,7 +18,7 @@ CREATE TABLE users_roles (
 );
 
 INSERT INTO users (id, username, password) VALUES ('1', 'waiter','12345');
-INSERT INTO users (id, username, password) VALUES ('2', 'admin','admin');
+INSERT INTO users (id, username, password) VALUES ('2', 'admin','admin123');
 INSERT INTO users (id, username, password) VALUES ('3', 'chief','54321');
 INSERT INTO users (id, username, password) VALUES ('4', 'manager','09876');
 

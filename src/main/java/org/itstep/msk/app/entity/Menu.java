@@ -19,6 +19,9 @@ public class Menu {
     @Column(length = 255)
     private String image;
 
+    @Column
+    private String path;
+
     @ManyToOne(targetEntity = Menu.class)
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Menu parent;
@@ -60,5 +63,13 @@ public class Menu {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
