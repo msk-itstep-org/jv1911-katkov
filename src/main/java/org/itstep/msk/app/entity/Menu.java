@@ -1,7 +1,5 @@
 package org.itstep.msk.app.entity;
 
-import com.sun.org.apache.xalan.internal.xsltc.dom.SimpleResultTreeImpl;
-
 import javax.persistence.*;
 import java.util.Set;
 

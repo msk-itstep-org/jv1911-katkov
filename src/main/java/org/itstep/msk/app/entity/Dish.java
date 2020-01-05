@@ -23,9 +23,6 @@ public class Dish {
     @Column
     private String description;
 
-    @Column
-    private Integer weight;
-
     @ManyToOne(targetEntity = Menu.class)
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
     private Menu menu;
@@ -34,10 +31,10 @@ public class Dish {
     @ManyToMany(targetEntity = Ingredient.class)
     @JoinTable(
             name = "weight_ingredients",
-            joinColumns = @JoinColumn(name = "weight_id", referencedColumnName = "weight"),
+            joinColumns = @JoinColumn(name = "weight_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     )
-    private Set<Ingredient> weightSet;
+    private Set<Ingredient> weight;
 
     public Integer getId() {
         return id;
@@ -83,11 +80,11 @@ public class Dish {
         this.menu = menu;
     }
 
-    public Set<Ingredient> getWeightSet() {
-        return weightSet;
+    public Set<Ingredient> getWeight() {
+        return weight;
     }
 
-    public void setWeightSet(Set<Ingredient> weightSet) {
-        this.weightSet = weightSet;
+    public void setWeight(Set<Ingredient> weight) {
+        this.weight = weight;
     }
 }
