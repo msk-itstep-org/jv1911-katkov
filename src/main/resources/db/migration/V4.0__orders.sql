@@ -1,5 +1,10 @@
 CREATE TABLE orders (
 	  id int unsigned unique not null auto_increment primary key,
-    orderDate date,
-    dishes_id int unsigned null references dishes (id)
+    orderDate timestamp
+);
+
+CREATE TABLE orders_dishes (
+    orders_id int not null references orders (id),
+    dishes_id int not null references dishes (id),
+    primary key (orders_id, dishes_id)
 );

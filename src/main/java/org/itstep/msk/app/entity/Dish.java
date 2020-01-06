@@ -36,6 +36,15 @@ public class Dish {
     )
     private Set<Ingredient> weight;
 
+    @Column
+    @ManyToMany(targetEntity = Order.class)
+    @JoinTable(
+            name = "orders_dishes",
+            joinColumns = @JoinColumn(name = "dishes_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id")
+    )
+    private Set<Order> orders;
+
     public Integer getId() {
         return id;
     }
@@ -86,5 +95,13 @@ public class Dish {
 
     public void setWeight(Set<Ingredient> weight) {
         this.weight = weight;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 }

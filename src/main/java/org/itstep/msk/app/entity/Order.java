@@ -1,7 +1,5 @@
 package org.itstep.msk.app.entity;
 
-import org.springframework.data.annotation.Id;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -14,10 +12,16 @@ public class Order {
     @Column
     private Integer id;
 
-    @Column
+    @Column (name = "orderDate")
     private Date orderDate;
 
-    @OneToMany(targetEntity = Dish.class, mappedBy = "id")
+    @Column
+    @ManyToMany(targetEntity = Dish.class)
+    @JoinTable(
+            name = "orders_dishes",
+            joinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "dishes_id", referencedColumnName = "id")
+    )
     private Set<Dish> dishes;
 
     public Integer getId() {
