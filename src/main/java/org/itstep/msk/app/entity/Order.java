@@ -12,10 +12,9 @@ public class Order {
     @Column
     private Integer id;
 
-    @Column (name = "orderDate")
+    @Column (name = "order_date")
     private Date orderDate;
 
-    @Column
     @ManyToMany(targetEntity = Dish.class)
     @JoinTable(
             name = "orders_dishes",

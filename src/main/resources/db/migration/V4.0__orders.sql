@@ -1,5 +1,6 @@
 CREATE TABLE orders (
 	  id int unsigned unique not null auto_increment primary key,
+	  order_date timestamp,
     orderDate timestamp
 );
 

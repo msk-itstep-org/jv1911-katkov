@@ -1,6 +1,7 @@
 package org.itstep.msk.app.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Entity
