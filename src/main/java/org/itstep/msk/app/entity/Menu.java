@@ -2,6 +2,7 @@ package org.itstep.msk.app.entity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -9,8 +10,8 @@ import java.util.Set;
 public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer id;
+    @Column(columnDefinition = "int unsigned")
+    private Long id;
 
     @Column(length = 50)
     private String name;
@@ -26,9 +27,9 @@ public class Menu {
     private Menu parent;
 
     @OneToMany(targetEntity = Menu.class, mappedBy = "parent")
-    private Set<Menu> children;
+    private List<Menu> children;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -48,11 +49,11 @@ public class Menu {
         this.parent = parent;
     }
 
-    public Set<Menu> getChildren() {
+    public List<Menu> getChildren() {
         return children;
     }
 
-    public void setChildren(Set<Menu> children) {
+    public void setChildren(List<Menu> children) {
         this.children = children;
     }
 

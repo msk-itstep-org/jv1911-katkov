@@ -1,30 +1,25 @@
 package org.itstep.msk.app.entity;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "ingredients")
 public class Ingredient {
 
-    @Column
+    @Column(columnDefinition = "int unsigned")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 100)
     private String name;
 
-    @ManyToMany(targetEntity = Dish.class)
-    @JoinTable(
-            name = "weight_ingredients",
-            joinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "weight_id", referencedColumnName = "id")
-    )
-    private Set<Dish> ingredientWeight;
+    @ManyToMany(targetEntity = Dish.class , mappedBy = "weight")
+    private List<Dish> ingredientWeight;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -36,11 +31,11 @@ public class Ingredient {
         this.name = name;
     }
 
-    public Set<Dish> getIngredientWeight() {
+    public List<Dish> getIngredientWeight() {
         return ingredientWeight;
     }
 
-    public void setIngredientWeight(Set<Dish> ingredientWeight) {
+    public void setIngredientWeight(List<Dish> ingredientWeight) {
         this.ingredientWeight = ingredientWeight;
     }
 }

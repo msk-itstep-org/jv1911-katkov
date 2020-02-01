@@ -1,4 +1,4 @@
-CREATE TABLE dishes (
+create table dishes (
     id int unsigned unique not null auto_increment primary key,
     name varchar(100) not null unique,
     photo varchar(100) null,
@@ -7,12 +7,12 @@ CREATE TABLE dishes (
     menu_id int not null
 );
 
-CREATE TABLE ingredients (
+create table ingredients (
     id int unsigned unique not null auto_increment primary key,
     name varchar(100)
 );
 
-CREATE TABLE weight_ingredients (
+create table weight_ingredients (
     weight_id int not null references dishes (id),
     ingredient_id int not null references ingredients (id),
     primary key (ingredient_id, weight_id)

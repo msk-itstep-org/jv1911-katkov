@@ -4,6 +4,7 @@ import org.itstep.msk.app.entity.User;
 import org.itstep.msk.app.repository.MenuRepository;
 import org.itstep.msk.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,12 +41,5 @@ public class MenuController {
     private String salads() {
         return "/menu/salads";
     }
-
-
-//    @GetMapping("/")
-//    public String index(Model model) {
-//        model.addAttribute("roots", menuRepository.getRootCategories());
-//
-//        return "menu";
-//    }
 }
+

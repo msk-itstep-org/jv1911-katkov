@@ -1,15 +1,16 @@
 package org.itstep.msk.app.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "dishes")
 public class Dish {
-    @Column
+    @Column(columnDefinition = "int unsigned")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 100)
     private String name;
@@ -34,7 +35,7 @@ public class Dish {
             joinColumns = @JoinColumn(name = "weight_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
     )
-    private Set<Ingredient> weight;
+    private List<Ingredient> weight;
 
     @Column
     @ManyToMany(targetEntity = Order.class)
@@ -43,9 +44,9 @@ public class Dish {
             joinColumns = @JoinColumn(name = "dishes_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id")
     )
-    private Set<Order> orders;
+    private List<Order> orders;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -89,19 +90,19 @@ public class Dish {
         this.menu = menu;
     }
 
-    public Set<Ingredient> getWeight() {
+    public List<Ingredient> getWeight() {
         return weight;
     }
 
-    public void setWeight(Set<Ingredient> weight) {
+    public void setWeight(List<Ingredient> weight) {
         this.weight = weight;
     }
 
-    public Set<Order> getOrders() {
+    public List<Order> getOrders() {
         return orders;
     }
 
-    public void setOrders(Set<Order> orders) {
+    public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
 }

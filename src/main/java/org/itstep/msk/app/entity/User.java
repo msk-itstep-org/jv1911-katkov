@@ -6,10 +6,10 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class User {
-    @Column
+    @Column(columnDefinition = "int unsigned")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(length = 100)
     private String username;
@@ -25,7 +25,7 @@ public class User {
     )
     private Set<Role> roles;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

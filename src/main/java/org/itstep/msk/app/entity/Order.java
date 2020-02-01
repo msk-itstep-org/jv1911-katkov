@@ -1,45 +1,40 @@
 package org.itstep.msk.app.entity;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer id;
+    @Column(columnDefinition = "int unsigned")
+    private Long id;
 
-    @Column (name = "order_date")
-    private Date orderDate;
+    @Column(name = "waiter_name")
+    private String waiterName;
 
-    @ManyToMany(targetEntity = Dish.class)
-    @JoinTable(
-            name = "orders_dishes",
-            joinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "dishes_id", referencedColumnName = "id")
-    )
-    private Set<Dish> dishes;
+    @OneToMany(targetEntity = OrdersDishes.class, mappedBy = "id")
+    private List<OrdersDishes> ordersDishes;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public Date getOrderDate() {
-        return orderDate;
+    public String getWaiterName() {
+        return waiterName;
     }
 
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
+    public void setWaiterName(String waiterName) {
+        this.waiterName = waiterName;
     }
 
-    public Set<Dish> getDishes() {
-        return dishes;
+    public List<OrdersDishes> getOrdersDishes() {
+        return ordersDishes;
     }
 
-    public void setDishes(Set<Dish> dishes) {
-        this.dishes = dishes;
+    public void setOrdersDishes(List<OrdersDishes> ordersDishes) {
+        this.ordersDishes = ordersDishes;
     }
 }
+

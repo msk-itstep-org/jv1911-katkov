@@ -1,11 +1,11 @@
-CREATE TABLE orders (
+create table orders (
 	  id int unsigned unique not null auto_increment primary key,
-	  order_date timestamp,
-    orderDate timestamp
+	  waiter_name varchar(100) null;
 );
 
-CREATE TABLE orders_dishes (
-    orders_id int not null references orders (id),
-    dishes_id int not null references dishes (id),
-    primary key (orders_id, dishes_id)
+create table orders_dishes (
+     id int unsigned unique not null auto_increment primary key,
+     orders_id int not null references orders (id),
+     dishes_id int not null references dishes (id),
+     quantity int null
 );

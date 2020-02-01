@@ -1,5 +1,5 @@
-CREATE TABLE menu (
-	  id int unsigned unique not null auto_increment primary key,
+create table menu (
+	  id INT unsigned unique not null auto_increment primary key,
     name varchar(50) not null,
     parent_id int unsigned references menu (id),
     image varchar(255) not null,
