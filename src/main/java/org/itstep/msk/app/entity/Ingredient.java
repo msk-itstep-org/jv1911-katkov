@@ -15,9 +15,8 @@ public class Ingredient {
     @Column(length = 100)
     private String name;
 
-    @ManyToMany(targetEntity = Dish.class , mappedBy = "weight")
-    private List<Dish> ingredientWeight;
-
+    @OneToMany(targetEntity = DishesIngredients.class, mappedBy = "ingredient")
+    private List<DishesIngredients> dishesIngredients;
 
     public Long getId() {
         return id;
@@ -31,11 +30,11 @@ public class Ingredient {
         this.name = name;
     }
 
-    public List<Dish> getIngredientWeight() {
-        return ingredientWeight;
+    public List<DishesIngredients> getDishesIngredients() {
+        return dishesIngredients;
     }
 
-    public void setIngredientWeight(List<Dish> ingredientWeight) {
-        this.ingredientWeight = ingredientWeight;
+    public void setDishesIngredients(List<DishesIngredients> dishesIngredients) {
+        this.dishesIngredients = dishesIngredients;
     }
 }

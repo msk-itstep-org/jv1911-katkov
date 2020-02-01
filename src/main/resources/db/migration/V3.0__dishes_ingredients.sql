@@ -12,10 +12,11 @@ create table ingredients (
     name varchar(100)
 );
 
-create table weight_ingredients (
-    weight_id int not null references dishes (id),
-    ingredient_id int not null references ingredients (id),
-    primary key (ingredient_id, weight_id)
+create table dishes_ingredients (
+    id int unsigned unique not null auto_increment primary key,
+    dishes_id int unsigned not null references dishes (id),
+    ingredients_id int unsigned not null references ingredients (id),
+    weight int not null
 );
 
 

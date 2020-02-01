@@ -1,5 +1,7 @@
 package org.itstep.msk.app.entity;
 
+import org.aspectj.weaver.ast.Or;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
@@ -28,27 +30,11 @@ public class Dish {
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
     private Menu menu;
 
-    @Column
-    @ManyToMany(targetEntity = Ingredient.class)
-    @JoinTable(
-            name = "weight_ingredients",
-            joinColumns = @JoinColumn(name = "weight_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id", referencedColumnName = "id")
-    )
-    private List<Ingredient> weight;
+    @OneToMany(targetEntity = DishesIngredients.class, mappedBy = "dish")
+    private List<DishesIngredients> dishesIngredients;
 
-    @Column
-    @ManyToMany(targetEntity = Order.class)
-    @JoinTable(
-            name = "orders_dishes",
-            joinColumns = @JoinColumn(name = "dishes_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "orders_id", referencedColumnName = "id")
-    )
-    private List<Order> orders;
-
-    public Long getId() {
-        return id;
-    }
+    @OneToMany(targetEntity = OrdersDishes.class, mappedBy = "dish")
+    private List<OrdersDishes> ordersDishes;
 
     public String getName() {
         return name;
@@ -90,19 +76,19 @@ public class Dish {
         this.menu = menu;
     }
 
-    public List<Ingredient> getWeight() {
-        return weight;
+    public List<DishesIngredients> getDishesIngredients() {
+        return dishesIngredients;
     }
 
-    public void setWeight(List<Ingredient> weight) {
-        this.weight = weight;
+    public void setDishesIngredients(List<DishesIngredients> dishesIngredients) {
+        this.dishesIngredients = dishesIngredients;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public List<OrdersDishes> getOrdersDishes() {
+        return ordersDishes;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setOrdersDishes(List<OrdersDishes> ordersDishes) {
+        this.ordersDishes = ordersDishes;
     }
 }

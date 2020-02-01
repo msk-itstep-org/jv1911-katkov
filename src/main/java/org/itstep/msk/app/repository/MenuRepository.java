@@ -10,7 +10,7 @@ import java.util.Set;
 
 
 @Repository
-public interface MenuRepository extends JpaRepository<Menu, Integer> {
+public interface MenuRepository extends JpaRepository<Menu, Long> {
     @Query("SELECT m FROM Menu m WHERE m.parent IS NULL")
     List<Menu> getRootCategories();
 }

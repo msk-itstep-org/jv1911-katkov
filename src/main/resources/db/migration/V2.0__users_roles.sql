@@ -2,7 +2,7 @@ create table users (
     id int unsigned unique not null auto_increment primary key,
     username varchar(100) not null unique,
     password varchar(10) not null unique,
-    unique index (username)
+    index (username)
 );
 
 create table roles (
