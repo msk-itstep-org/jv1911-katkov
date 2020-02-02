@@ -52,7 +52,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/menu").permitAll()
                 .antMatchers("/denied").permitAll()
-                .antMatchers("/").permitAll();
+                .antMatchers("/").permitAll()
+                .anyRequest().permitAll();
 //                .anyRequest().authenticated();
 
         httpSecurity.csrf().disable();
@@ -66,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         httpSecurity.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/logout");
+                .logoutSuccessUrl("/login");
 
         httpSecurity.exceptionHandling()
                 .accessDeniedPage("/denied");

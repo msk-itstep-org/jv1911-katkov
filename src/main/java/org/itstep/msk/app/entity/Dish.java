@@ -1,10 +1,7 @@
 package org.itstep.msk.app.entity;
 
-import org.aspectj.weaver.ast.Or;
-
 import javax.persistence.*;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "dishes")

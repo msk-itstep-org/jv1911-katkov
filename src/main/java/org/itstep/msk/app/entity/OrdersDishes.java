@@ -20,7 +20,7 @@ public class OrdersDishes {
     private Dish dish;
 
     @Column
-    private Integer quantity;
+    private Integer quantity = 1;
 
     public Long getId() {
         return id;

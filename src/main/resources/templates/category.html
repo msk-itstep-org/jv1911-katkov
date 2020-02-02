@@ -4,7 +4,8 @@
         <li th:each="category : ${menu}">
             <img th:src="${category.image}"
                      style = "height:20px"/>
-            <a th:href="@{/menu{path}(path = ${category.path})}"><span th:text="${category.name}"></span></a>
+            <a th:href="@{/menu{path}(path = ${category.path})}">
+            <span th:text="${category.name}"></span></a>
             <section th:include="@{/category.html} :: category_fragment"
                      th:with="menu = ${category.children}"
                      th:if="!${category.children.empty}"
