@@ -29,7 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder authentication) throws Exception {
-        String userQuery = "SELECT username, password, 1 AS active FROM users WHERE username is ?";
+        String userQuery = "SELECT username, password, 1 AS active FROM users WHERE username = ?";
         String roleQuery = "SELECT u.username, r.role "
                 + "FROM users u "
                 + "INNER JOIN users_roles ur ON ur.user_id = u.id "

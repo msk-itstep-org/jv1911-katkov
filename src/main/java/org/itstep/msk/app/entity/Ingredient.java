@@ -18,6 +18,14 @@ public class Ingredient {
     @OneToMany(targetEntity = DishesIngredients.class, mappedBy = "ingredient")
     private List<DishesIngredients> dishesIngredients;
 
+    @ManyToMany(targetEntity = Storage.class)
+    @JoinTable(
+            name = "ingredients_storage",
+            joinColumns = @JoinColumn(name = "ingredients_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "storage_id", referencedColumnName = "id")
+    )
+    private List<Storage> storages;
+
     public Long getId() {
         return id;
     }
@@ -36,5 +44,13 @@ public class Ingredient {
 
     public void setDishesIngredients(List<DishesIngredients> dishesIngredients) {
         this.dishesIngredients = dishesIngredients;
+    }
+
+    public List<Storage> getStorages() {
+        return storages;
+    }
+
+    public void setStorages(List<Storage> storages) {
+        this.storages = storages;
     }
 }
