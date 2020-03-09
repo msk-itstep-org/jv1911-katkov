@@ -33,6 +33,10 @@ public class Dish {
     @OneToMany(targetEntity = OrdersDishes.class, mappedBy = "dish")
     private List<OrdersDishes> ordersDishes;
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
     }

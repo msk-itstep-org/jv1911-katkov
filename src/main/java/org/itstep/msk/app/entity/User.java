@@ -14,7 +14,7 @@ public class User {
     @Column(length = 100)
     private String username;
 
-    @Column(length = 10)
+    @Column
     private String password;
 
     @ManyToMany(targetEntity = Role.class)
