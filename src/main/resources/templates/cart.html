@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+</head>
+<body>
+    <h1>Новый заказ</h1>
+            <table>
+                <thead>
+                <tr>
+                    <th>Наименование блюда</th>
+                    <th >Фото блюда</th>
+                    <th>Количество</th>
+                    <th>Удалить</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ordersDishes : ${currentCart}">
+                    <td th:text="${ordersDishes.dish.name}"></td>
+                    <td><img th:src="${ordersDishes.dish.photo}"></td>
+                    <td th:text="${ordersDishes.quantity}"></td>
+                    <td>
+                        <a class="js-delete" th:href="@{/delete-dish/{id}(id=${ordersDishes.dish.id})}">&times;</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        <script src="/js/jQuery.js"></script>
+        <script src="/js/cart.js"></script>
+    <script>
+
+    </script>
+</body>
+</html>

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Авторизация</title>
+    <title>Регистрация</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-    <h1 style="text-align: center">Авторизация</h1>
-    <form action="/login" method="post">
+    <h1 style="text-align: center">Регистрация</h1>
+    <form th:action="@{/registration}" method="post" th:object="${newUser}">
         <div class="form-group row align-items-center">
             <div class="col"></div>
             <!--<label for="username" class="col-sm-2 col-form-label col-form-label-lg">Введите имя пользователя</label>-->
@@ -15,7 +15,7 @@
                 <input type="text"
                        id="username"
                        class="form-control form-control-lg"
-                       name="username"
+                       th:field = "*{username}"
                        placeholder="Введите имя пользователя">
             </div>
             <div class="col"></div>
@@ -27,15 +27,14 @@
                 <input type="password"
                        id="password"
                        class="form-control form-control-lg"
-                       name="password"
+                       th:field="*{password}"
                        placeholder="Введите пароль">
             </div>
             <div class="col"></div>
         </div>
         <div class="form-group row align-items-center">
             <div class="col"></div>
-            <button type="submit" class="btn btn-primary btn-lg">Войти</button>
-            <a href="/registration" class="btn btn-secondary btn-lg" role="button" aria-disabled="true">Регистрация</a>
+            <button type="submit" class="btn btn-primary btn-lg">Зарегистрировать</button>
             <div class="col"></div>
         </div>
     </form>

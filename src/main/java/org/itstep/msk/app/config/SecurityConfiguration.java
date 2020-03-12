@@ -1,6 +1,6 @@
 package org.itstep.msk.app.config;
 
-import org.itstep.msk.app.service.PlainPasswordEncoder;
+import org.itstep.msk.app.service.MyBCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,7 +17,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
     @Autowired
-    private PlainPasswordEncoder passwordEncoder;
+    private MyBCryptPasswordEncoder myBCryptPasswordEncoder;
 
     @Override
     public void configure(WebSecurity webSecurity) {
@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource)
                 .usersByUsernameQuery(userQuery)
                 .authoritiesByUsernameQuery(roleQuery)
-                .passwordEncoder(passwordEncoder);
+                .passwordEncoder(myBCryptPasswordEncoder);
     }
 
     @Override

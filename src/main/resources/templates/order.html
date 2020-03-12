@@ -5,7 +5,7 @@
     <title>Order</title>
 </head>
 <body>
-    <h1>Новый заказ</h1>
+    <h1 th:text="${menu.name}"></h1>
     <h1>Товары</h1>
     <ul>
         <li th:each="dish : ${dishes}">
@@ -14,12 +14,32 @@
             <p th:text="${'Цена: ' + dish.cost + ' руб.'}"></p>
             <span th:text="${'Описание: ' + dish.description}"></span>
             <form th:action="@{/add-to-order}" method="post">
-                <input type="number" min="1" name="quantity"/>
+                <input type="number" min="1" name="quantity" value="1"/>
                 <input type="hidden" name="dishId" th:value="${dish.id}"/>
-                <button type="submit">Сделать заказ</button>
+                <button type="submit">Выбрать</button>
             </form>
         </li>
     </ul>
     <script src="/js/jQuery.js"></script>
 </body>
 </html>
+
+<!--Работающий вариант-->
+<!--<body>-->
+<!--<h1 th:text="${menu.name}"></h1>-->
+<!--<h1>Товары</h1>-->
+<!--<ul>-->
+    <!--<li th:each="dish : ${dishes}">-->
+        <!--<p th:text="${dish.name}"></p>-->
+        <!--<img th:src="${dish.photo}" style = height:100px>-->
+        <!--<p th:text="${'Цена: ' + dish.cost + ' руб.'}"></p>-->
+        <!--<span th:text="${'Описание: ' + dish.description}"></span>-->
+        <!--<form th:action="@{/add-to-order}" method="post">-->
+            <!--<input type="number" min="1" name="quantity" value="0"/>-->
+            <!--<input type="hidden" name="dishId" th:value="${dish.id}"/>-->
+            <!--<button type="submit">Выбрать</button>-->
+        <!--</form>-->
+    <!--</li>-->
+<!--</ul>-->
+<!--<script src="/js/jQuery.js"></script>-->
+<!--</body>-->

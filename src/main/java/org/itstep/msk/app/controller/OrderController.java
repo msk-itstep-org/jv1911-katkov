@@ -10,14 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
+import java.security.Principal;
 
 @Controller
 public class OrderController {
@@ -30,28 +27,21 @@ public class OrderController {
     @Autowired
     private OrdersDishesRepository ordersDishesRepository;
 
-    @GetMapping("/order")
-    public String makeNewOrder(Model model) {
-        List<Dish> dishes = dishRepository.findAll();
-        model.addAttribute("dishes", dishes);
-//        model.addAttribute("orders", orderRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION)));
-        return "order";
-    }
-
-    @PostMapping("/order/add-to-order")
-    public String addToCart(
-            @RequestParam String quantity,
+    @PostMapping("/add-to-order")
+    public String addToOrder(
             @RequestParam String dishId,
+            @RequestParam String quantity,
             @CookieValue(
                     value = "orderId",
                     required = false,
                     defaultValue = "0"
             ) String orderId,
-            HttpServletResponse response
+            HttpServletResponse response,
+            Principal principal //для того, чтобы сделать имена пользователей
     ) {
         Dish dish = dishRepository.getOne(Long.parseLong(dishId));
         if (dish == null) {
-            throw new RuntimeException("Товар не найден");
+            throw new RuntimeException("Такое блюдо не существует");
         }
 
         Order order;
@@ -59,6 +49,7 @@ public class OrderController {
         if (orderId.equals("0")) {
             // Создаем заказ и сохраняем в базе данных через репозиторий
             order = new Order();
+            order.setWaiterName("Вася");
             orderRepository.save(order);
             orderRepository.flush();
 
@@ -73,6 +64,7 @@ public class OrderController {
             if (order == null) {
                 // Создаем заказ заново
                 order = new Order();
+                order.setWaiterName("Мустафа");
                 orderRepository.save(order);
                 orderRepository.flush();
 
@@ -91,7 +83,7 @@ public class OrderController {
         ordersDishesRepository.save(ordersDishes);
         ordersDishesRepository.flush();
 
-        return "redirect:/";
+        return "redirect:/menu/" + dish.getMenu().getId();
     }
 }
 
