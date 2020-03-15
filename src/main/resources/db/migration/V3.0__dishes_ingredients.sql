@@ -16,7 +16,7 @@ create table dishes_ingredients (
     id int unsigned unique not null auto_increment primary key,
     dishes_id int unsigned not null references dishes (id),
     ingredients_id int unsigned not null references ingredients (id),
-    weight int not null
+    weight double not null
 );
 
 insert into dishes

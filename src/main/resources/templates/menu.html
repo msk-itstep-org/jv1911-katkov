@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Это меню!</h1>
-<section th:include="@{/category.html} :: category_fragment"
+<section th:insert="@{/category.html} :: category_fragment"
          th:with="menu = ${roots}"
 ></section>
 

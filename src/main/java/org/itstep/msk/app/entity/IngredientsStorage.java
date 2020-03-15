@@ -2,16 +2,10 @@ package org.itstep.msk.app.entity;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Entity
-@Table(name = "storage")
-public class Storage {
-    @Id
-    @Column(columnDefinition = "int unsigned")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Table(name = "ingredients_storage")
+public class IngredientsStorage {
 
     @Column(name = "receipt_date")
     private Date receiptDate;
@@ -22,23 +16,15 @@ public class Storage {
     @Column(name = "price_for_kilo")
     private Integer priceForKilo;
 
-    @ManyToMany(targetEntity = Ingredient.class, mappedBy = "storages")
-    private List<Ingredient> ingredients;
+    @ManyToOne(targetEntity = Ingredient.class)
+    @JoinColumn(name = "ingredients_id", referencedColumnName = "id")
+    private Ingredient ingredient;
 
-    @ManyToOne(targetEntity = Provider.class)
-    @JoinColumn(name = "providers_id", referencedColumnName = "id")
+    @OneToOne(targetEntity = Provider.class)
     private Provider provider;
-
-    public Long getId() {
-        return id;
-    }
 
     public Date getReceiptDate() {
         return receiptDate;
-    }
-
-    public void setReceiptDate(Date receiptDate) {
-        this.receiptDate = receiptDate;
     }
 
     public Double getQuantity() {
@@ -57,12 +43,12 @@ public class Storage {
         this.priceForKilo = priceForKilo;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
+    public Ingredient getIngredient() {
+        return ingredient;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
+    public void setIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
     }
 
     public Provider getProvider() {

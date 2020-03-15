@@ -18,9 +18,6 @@ public class Provider {
     @Column(name = "delivery_cost")
     private Integer deliveryCost;
 
-    @OneToMany(targetEntity = Storage.class, mappedBy = "id")
-    private Set<Storage> items;
-
     public Long getId() {
         return id;
     }
@@ -39,13 +36,5 @@ public class Provider {
 
     public void setDeliveryCost(Integer deliveryCost) {
         this.deliveryCost = deliveryCost;
-    }
-
-    public Set<Storage> getItems() {
-        return items;
-    }
-
-    public void setItems(Set<Storage> items) {
-        this.items = items;
     }
 }
