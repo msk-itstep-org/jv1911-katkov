@@ -27,29 +27,4 @@ public class SecurityController {
 
         return "login";
     }
-
-    @GetMapping("/registration")
-    public String registration(@RequestParam(defaultValue = "false") String same, Model model) {
-        model.addAttribute("same", same.equalsIgnoreCase("true"));
-
-        return "registration";
-    }
-
-    @PostMapping("/registration")
-    public String register(@ModelAttribute User user) {
-        User same = userRepository.findByUsername(user.getUsername());
-        if (same != null) {
-            return "redirect:/registration?same=true";
-        }
-
-        user.getRoles().add(Role.ROLE_WAITER);
-        user.setPassword(
-                myBCryptPasswordEncoder.encode(user.getPassword())
-        );
-
-        userRepository.save(user);
-        userRepository.flush();
-
-        return "redirect:/login";
-    }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Order findFirstById(Long id);
 
-    List<Order> findAllByActiveIsTrue();
+    List<Order> findAllByActiveIsTrueOrderByOrderDate();
 }
