@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "orders_dishes")
-public class OrdersDishes {
+public class OrderDish {
 
     @Id
     @Column(columnDefinition = "int unsigned")

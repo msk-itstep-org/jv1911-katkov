@@ -1,92 +1,146 @@
 package org.itstep.msk.app.service.impl;
 
-import org.itstep.msk.app.entity.DishesIngredients;
+import org.itstep.msk.app.entity.Dish;
+import org.itstep.msk.app.entity.DishIngredient;
 import org.itstep.msk.app.entity.Ingredient;
-import org.itstep.msk.app.entity.IngredientsStorage;
+import org.itstep.msk.app.entity.IngredientStorage;
 import org.itstep.msk.app.model.IngrAndQuantity;
-import org.itstep.msk.app.repository.DishesIngredientsRepository;
-import org.itstep.msk.app.repository.IngredientsStorageRepository;
+import org.itstep.msk.app.repository.DishIngredientRepository;
+import org.itstep.msk.app.repository.IngredientStorageRepository;
 import org.itstep.msk.app.service.IngredientsQuantityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class IngredientsQuantityServiceImpl implements IngredientsQuantityService {
 
-    private DishesIngredientsRepository dishesIngredientsRepository;
-    private IngredientsStorageRepository ingredientsStorageRepository;
+    private DishIngredientRepository dishIngredientRepository;
+    private IngredientStorageRepository ingredientStorageRepository;
 
     @Autowired
     public IngredientsQuantityServiceImpl(
-            DishesIngredientsRepository dishesIngredientsRepository,
-            IngredientsStorageRepository ingredientsStorageRepository
+            DishIngredientRepository dishIngredientRepository,
+            IngredientStorageRepository ingredientStorageRepository
     ) {
-        this.dishesIngredientsRepository = dishesIngredientsRepository;
-        this.ingredientsStorageRepository = ingredientsStorageRepository;
+        this.dishIngredientRepository = dishIngredientRepository;
+        this.ingredientStorageRepository = ingredientStorageRepository;
     }
 
-    // Находим сколько ингредиентов осталось на складе для КОНКРЕТНОГО блюда (нужно для как отдельный запрос)
+    // Находим сколько ингредиентов осталось на складе для КОНКРЕТНОГО блюда (нужно для отдельного запроса)
     @Override
-    public List<IngrAndQuantity> countIngredientsQuantityRest(Long dishId) {
+    public List<IngrAndQuantity> countIngredientsQuantityRest(Dish dish) {
         // нашел ингредиенты в блюде и их количество
-        List<DishesIngredients> ingredientsInDish = getIngredientsByDish(dishId);
+        List<DishIngredient> ingredientsInDish = getIngredientsByDish(dish);
         // узнал количество выбранных элементов на складе
         List<IngrAndQuantity> ingredientsInStorage = new ArrayList<>();
 
-        for (DishesIngredients dishesIngredients : ingredientsInDish) {
-            ingredientsInStorage.add(countRestIngrInStorage(dishesIngredients.getIngredient()));
+        for (DishIngredient dishIngredient : ingredientsInDish) {
+            ingredientsInStorage.add(countRestIngrInStorage(dishIngredient.getIngredient()));
         }
 
         return ingredientsInStorage;
     }
 
-    // вычитаем элементы из имеющихся на складе
-    private void removeIngredientsFromStorage (Long dishId, List<IngrAndQuantity> ingrAndQuantities) {
-        List<DishesIngredients> ingredietsInDish = getIngredientsByDish(dishId); // задвоение
+    // Сколько всего ингредиентов (на будующее для менеджера)
+    @Override
+    public List<IngrAndQuantity> countAllIngredients() {
+        List<IngredientStorage> ingredientStorages = ingredientStorageRepository.findAll();
+        Set<IngrAndQuantity> ingrAndQuantityHashSet = new HashSet<>();
 
-        for (DishesIngredients ingredietsInDish1 : ingredietsInDish) {
-            Double dishIngrWeight = ingredietsInDish1.getWeight();
-            IngrAndQuantity ingrInStorage = ingrAndQuantities.get(ingrAndQuantities.indexOf(ingredietsInDish1));
+        for (IngredientStorage ingredientStorage : ingredientStorages) {
+            IngrAndQuantity ingrAndQuantity = countRestIngrInStorage(ingredientStorage.getIngredient());
+            ingrAndQuantityHashSet.add(ingrAndQuantity);
+        }
+        ArrayList<IngrAndQuantity> result = new ArrayList<>(ingrAndQuantityHashSet);
+        result.sort(Comparator.comparing(x -> x.getIngredient().toString()));
 
-            if (dishIngrWeight > ingrInStorage.getQuantity()) {
-                throw new RuntimeException("Маловато будет");
-            } else {
-                // получил ингредиенты на складе
-                List<IngredientsStorage> tempIngrs = ingredientsStorageRepository
-                        .findAllByIngredient(ingrInStorage.getIngredient());
-
-                double restWeight = dishIngrWeight;
-                for (IngredientsStorage tempIngr : tempIngrs) {
-
-                    if (restWeight <= tempIngr.getQuantity()) {
-                        tempIngr.setQuantity(tempIngr.getQuantity() - dishIngrWeight);
-                        break;
-                    } else {
-                        // вычли и обнулили
-                        restWeight -= tempIngr.getQuantity();
-                        tempIngr.setQuantity(0.0);
-                    }
-                }
+        return result;
+    }
+    // Сколько блюд еще можно приготовить
+    @Override
+    public Integer countDishesCanCook (Dish dish) {
+        List<DishIngredient> dishesIngredients = getIngredientsByDish(dish);
+        double result = Integer.MAX_VALUE;
+        for(DishIngredient oneDI : dishesIngredients) {
+            //сколько ингредиента есть на складе
+            IngrAndQuantity oneIngredient = countRestIngrInStorage(oneDI.getIngredient());
+            double count = Math.floor(oneIngredient.getQuantity() / oneDI.getWeight());
+            if (count < result) {
+                result = count;
             }
+        }
+        return (int) result;
+    }
+
+    // вычитаем ВСЕ элементы из имеющихся на складе
+    @Override
+    public void removeIngredientsFromStorage (Dish dish, Integer dishQuantity) {
+
+        // ингредиенты в блюде и их количество
+        List<DishIngredient> ingredientsInDishes = getIngredientsByDish(dish);
+
+        for (DishIngredient ingredientsInDish : ingredientsInDishes) {
+            removeOneIngredient(
+                    ingredientsInDish.getIngredient(),
+                    ingredientsInDish.getWeight() * dishQuantity
+            );
         }
     }
 
     // узнать какие ингредиенты есть в блюде (мы знаем ингредиенты и их вес)
-    private List<DishesIngredients> getIngredientsByDish(Long dishId) {
-        return dishesIngredientsRepository.ingredientsForDish(dishId);
+    private List<DishIngredient> getIngredientsByDish(Dish dish) {
+        return dishIngredientRepository.findAllByDish(dish);
     }
 
     // берем ОДИН ингредиент и считаем сколько его есть на складе
     private IngrAndQuantity countRestIngrInStorage(Ingredient ingredient) {
-        List<IngredientsStorage> storagesIngr = ingredientsStorageRepository.findAllByIngredient(ingredient);
+        List<IngredientStorage> storagesIngr = ingredientStorageRepository.findAllByIngredient(ingredient);
         double sumOfQuantity = 0.0;
-        for (IngredientsStorage storage : storagesIngr) {
+        for (IngredientStorage storage : storagesIngr) {
             sumOfQuantity += storage.getQuantity();
         }
         return new IngrAndQuantity(ingredient, sumOfQuantity);
     }
 
+    // вычитаем ОДИН ингредиент из имеющиехся на складе
+    private void removeOneIngredient(Ingredient ingredient, Double quantityOfOrder) {
+        List<IngredientStorage> storagesIngrs = ingredientStorageRepository.findAllByIngredient(ingredient);
+        storagesIngrs.sort((x, y) -> {
+            if (x.getReceiptDate().before(y.getReceiptDate())) {
+                return 1;
+            } else if (x.getReceiptDate().after(y.getReceiptDate())) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+
+        // Проверка сколько всего ингредиентов есть на складе
+        if (quantityOfOrder > countRestIngrInStorage(ingredient).getQuantity()) {
+            throw new RuntimeException("WTF");
+        }
+
+        double ingrWeight = quantityOfOrder;
+        IngredientStorage result = new IngredientStorage();
+
+        for (IngredientStorage storagesIngr : storagesIngrs) {
+
+            double currentIngrQuantity = storagesIngr.getQuantity();
+            if (currentIngrQuantity >= ingrWeight) {
+                result.setQuantity(currentIngrQuantity - ingrWeight);
+                result.setIngredient(ingredient);
+                result.setPriceForKilo(storagesIngr.getPriceForKilo());
+                result.setReceiptDate(storagesIngr.getReceiptDate());
+                ingredientStorageRepository.delete(storagesIngr);
+                ingredientStorageRepository.save(result);
+                break;
+            } else {
+                ingredientStorageRepository.delete(storagesIngr);
+                ingrWeight -= currentIngrQuantity;
+            }
+        }
+        ingredientStorageRepository.flush();
+    }
 }

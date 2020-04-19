@@ -1,7 +1,15 @@
 package org.itstep.msk.app.entity;
 
+import org.itstep.msk.app.enums.Role;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -12,18 +20,30 @@ public class User {
     private Long id;
 
     @Column(length = 100)
+    @NotEmpty(message = "Имя пользователя не должно быть пустым")
+    @Size(min = 2, max = 25, message = "Имя пользователя не должно быть меньше 2 знаков и больше 25")
     private String username;
 
+    @Column (length = 100)
+    @NotEmpty(message = "email не должен быть пустым")
+    @Email
+    private String email;
+
     @Column
+    @NotEmpty(message = "Пароль не должен быть пустым")
     private String password;
 
-    @ManyToMany(targetEntity = Role.class)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    private Set<Role> roles;
+    @Column(name = "active", nullable = false, columnDefinition = "BIT")
+    private Boolean active = true;
+
+    @ElementCollection(targetClass = Role.class)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(targetEntity = Order.class, mappedBy = "id")
+    private List<Order> orders;
 
     public Long getId() {
         return id;
@@ -37,6 +57,14 @@ public class User {
         this.username = username;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -45,11 +73,28 @@ public class User {
         this.password = password;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public Set<String> getStringRoles() {
+        return roles.stream()
+                .map(Enum::toString)
+                .collect(Collectors.toSet());
+    }
+
+    public void setStringRoles(Set<String> stringRoles) {
+        roles.clear();
+        for (String stringRole : stringRoles) {
+            roles.add(Role.valueOf(stringRole));
+        }
     }
 }

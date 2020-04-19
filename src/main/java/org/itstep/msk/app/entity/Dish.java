@@ -1,6 +1,7 @@
 package org.itstep.msk.app.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity
@@ -11,27 +12,42 @@ public class Dish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
+    @Size(min = 2, max = 30, message = "Название блюда не должно быть меньше 2 знаков и больше 30")
+    @Pattern(regexp = "[\\D]+", message = "Название блюда не должно содержать цифр")
     @Column(length = 100)
     private String name;
 
     @Column(length = 100)
     private String photo;
 
+    @NotEmpty
+    @Max(value = 100000, message = "Стоимость блюда превышает 100000!!!")
+    @Pattern(regexp = "[\\d]+", message = "Название блюда должно содержать только цифры")
     @Column
     private Integer cost;
 
+    @NotEmpty
+    @Size(max = 255, message = "Слишком длинное описание блюда")
     @Column
     private String description;
+
+    @Column(name = "active", nullable = false, columnDefinition = "BIT")
+    private Boolean active = true;
 
     @ManyToOne(targetEntity = Menu.class)
     @JoinColumn(name = "menu_id", referencedColumnName = "id")
     private Menu menu;
 
-    @OneToMany(targetEntity = DishesIngredients.class, mappedBy = "dish")
-    private List<DishesIngredients> dishesIngredients;
+    @OneToMany(targetEntity = DishIngredient.class, mappedBy = "dish")
+    private List<DishIngredient> dishesIngredients;
 
-    @OneToMany(targetEntity = OrdersDishes.class, mappedBy = "dish")
-    private List<OrdersDishes> ordersDishes;
+    @OneToMany(targetEntity = OrderDish.class, mappedBy = "dish")
+    private List<OrderDish> ordersDishes;
+
+    @OneToOne(targetEntity = Upload.class)
+    @JoinColumn(name = "photo_id", referencedColumnName = "id")
+    private Upload dishPhoto;
 
     public Long getId() {
         return id;
@@ -77,19 +93,35 @@ public class Dish {
         this.menu = menu;
     }
 
-    public List<DishesIngredients> getDishesIngredients() {
+    public List<DishIngredient> getDishesIngredients() {
         return dishesIngredients;
     }
 
-    public void setDishesIngredients(List<DishesIngredients> dishesIngredients) {
+    public void setDishesIngredients(List<DishIngredient> dishesIngredients) {
         this.dishesIngredients = dishesIngredients;
     }
 
-    public List<OrdersDishes> getOrdersDishes() {
+    public List<OrderDish> getOrdersDishes() {
         return ordersDishes;
     }
 
-    public void setOrdersDishes(List<OrdersDishes> ordersDishes) {
+    public void setOrdersDishes(List<OrderDish> ordersDishes) {
         this.ordersDishes = ordersDishes;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Upload getDishPhoto() {
+        return dishPhoto;
+    }
+
+    public void setDishPhoto(Upload dishPhoto) {
+        this.dishPhoto = dishPhoto;
     }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "dishes_ingredients")
-public class DishesIngredients {
+public class DishIngredient {
 
     @Column(columnDefinition = "int unsigned")
     @Id
@@ -16,13 +16,13 @@ public class DishesIngredients {
     @JoinColumn(name = "dishes_id", referencedColumnName = "id")
     private Dish dish;
 
+    @OrderBy("name")
     @ManyToOne(targetEntity = Ingredient.class)
     @JoinColumn(name = "ingredients_id", referencedColumnName = "id")
     private Ingredient ingredient;
 
     @Column
     private Double weight;
-
 
     public Long getId() {
         return id;

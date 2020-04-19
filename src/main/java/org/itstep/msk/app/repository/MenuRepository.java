@@ -12,4 +12,12 @@ import java.util.List;
 public interface MenuRepository extends JpaRepository<Menu, Long> {
     @Query("SELECT m FROM Menu m WHERE m.parent IS NULL")
     List<Menu> getRootCategories();
+
+    @Query("SELECT m " +
+            "FROM Menu m " +
+            "WHERE m.parent IS NOT NULL OR m.parent NOT BETWEEN 1 AND 3 " +
+            "ORDER BY  m.name")
+    List<Menu> findAllInFinishState();
+
+
 }

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Блюда')}"></head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/header::header}"></div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <table class="table table-bordered text-lg-center table-hover form-control-lg" align="center">
+        <thead class="thead-dark">
+        <tr>
+            <th>№</th>
+            <th>Наименование</th>
+            <th>Категория</th>
+            <th>Фото</th>
+            <th>Цена</th>
+            <th>Описание</th>
+            <th>Ингредиенты</th>
+            <th>Редактировать</th>
+            <th>Удалить</th>
+        </tr>
+        </thead>
+        <tbody class="align-middle">
+        <tr th:each="dish : ${items}">
+            <td th:text="${dishStat.count} + ${page} * ${pageValue}"></td>
+            <td th:text="${dish.name}"></td>
+            <td th:text="${dish.menu.name}"></td >
+            <td>
+                <img
+                    th:if="${dish.dishPhoto != null}"
+                    th:src="@{/admin/dish/upload/{uploadId}(uploadId=${dish.dishPhoto.id})}"
+                    style="height: 150px; width: 200px"
+                />
+            </td >
+            <td th:text="${dish.cost}"></td >
+            <td th:text="${dish.description}"></td >
+            <td>
+                <a tabindex="0"
+                   th:attr="data-dish-id=${dish.id}"
+                   class="btn btn-lg btn-success js-dish-popover"
+                   role="button" data-toggle="popover">
+                   Ингредиенты<span th:text="${dish.dishesIngredients.size()}" class="badge badge-light"></span></a>
+            </td>
+            <td>
+                <a th:href="@{/admin/dish/edit/{id}(id = ${dish.id})}">Редактировать</a>
+            </td>
+            <td>
+                <a th:href="@{/admin/dish/delete/{id}(id = ${dish.id})}">Удалить</a>
+            </td>
+        </tr>
+         </tbody>
+    </table>
+    </br>
+    <a th:href="@{/admin/dish/add/}" class="btn btn-dark btn-lg" role="button">Добавить новое блюдо</a>
+    <br/>
+    <br/>
+    <nav>
+        <ul class="pagination pagination-lg">
+            <li th:class="${page == 0 ? 'page-item disabled' : 'page-item'}">
+                <a th:href="@{/admin/dish/start(page=${page - 1})}" class="page-link">&laquo;</a>
+            </li>
+            <li th:each="p : ${pagesRange}" th:class="${p == page ? 'page-item active' : 'page-item'}">
+                <a th:href="@{/admin/dish/start(page=${p})}" class="page-link" th:text="${p + 1}">12</a>
+            </li>
+            <li th:class="${page == pages - 1 ? 'page-item disabled' : 'page-item'}">
+                <a th:href="@{/admin/dish/start(page=${page + 1})}" class="page-link">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+    <div th:replace="~{fragments/js-connect::js-connect}"></div>
+
+    <script th:inline="javascript">
+        const dishIngredientsData = [[${dish_ingredients}]];
+        const dishIngredients = {};
+
+        for (let dishId in dishIngredientsData) {
+            const list = $("<ul></ul>");
+
+            dishIngredientsData[dishId].forEach(function (ingredient) {
+
+                const element = $("<li></li>");
+            element.text(ingredient).appendTo(list);
+        });
+
+            dishIngredients[dishId] = list;
+        }
+
+        $(function () {
+            $(".js-dish-popover").popover({
+                html: true,
+                title: "Список ингредиентов",
+                trigger: "click hover",
+                content: function () {
+                    const dishId = $(this).attr("data-dish-id");
+
+                    return dishIngredients[dishId];
+                }
+            });
+        })
+    </script>
+</div>
+</body>
+

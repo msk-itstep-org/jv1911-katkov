@@ -1,16 +1,14 @@
 package org.itstep.msk.app.controller;
 
-import org.itstep.msk.app.entity.Dish;
-import org.itstep.msk.app.entity.OrdersDishes;
+import org.itstep.msk.app.entity.OrderDish;
 import org.itstep.msk.app.entity.User;
-import org.itstep.msk.app.repository.OrdersDishesRepository;
+import org.itstep.msk.app.repository.OrderDishRepository;
 import org.itstep.msk.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class CartController {
     private UserRepository userRepository;
 
     @Autowired
-    private OrdersDishesRepository ordersDishesRepository;
+    private OrderDishRepository orderDishRepository;
 
     @GetMapping("/cart")
     private String cart(
@@ -40,7 +38,7 @@ public class CartController {
             model.addAttribute("user", null);
         }
 
-        List<OrdersDishes> ordersDishes = ordersDishesRepository.findByOrderId(Long.parseLong(orderId));
+        List<OrderDish> ordersDishes = orderDishRepository.findByOrderId(Long.parseLong(orderId));
 
         model.addAttribute("currentCart", ordersDishes);
 
@@ -55,14 +53,14 @@ public class CartController {
                                       required = false,
                                       defaultValue = "0"
                               ) String orderId) {
-        OrdersDishes ordersDishes = ordersDishesRepository.findByOrderishId(dishId, Long.parseLong(orderId));
+        OrderDish orderDish = orderDishRepository.findByOrderId(dishId, Long.parseLong(orderId));
 
-        if (ordersDishes == null) {
+        if (orderDish == null) {
             throw new RuntimeException("Нет такого");
         }
 
-        ordersDishesRepository.delete(ordersDishes);
-        ordersDishesRepository.flush();
+        orderDishRepository.delete(orderDish);
+        orderDishRepository.flush();
 
         return "ok";
     }

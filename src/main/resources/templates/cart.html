@@ -16,12 +16,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="ordersDishes : ${currentCart}">
-                    <td th:text="${ordersDishes.dish.name}"></td>
-                    <td><img th:src="${ordersDishes.dish.photo}"></td>
-                    <td th:text="${ordersDishes.quantity}"></td>
+                <tr th:each="orderDish : ${currentCart}">
+                    <td th:text="${orderDish.dish.name}"></td>
+                    <td><img th:src="${orderDish.dish.photo}"></td>
+                    <td th:text="${orderDish.quantity}"></td>
                     <td>
-                        <a class="js-delete" th:href="@{/delete-dish/{id}(id=${ordersDishes.dish.id})}">&times;</a>
+                        <a class="js-delete" th:href="@{/delete-dish/{id}(id=${orderDish.dish.id})}">&times;</a>
                     </td>
                 </tr>
                 </tbody>

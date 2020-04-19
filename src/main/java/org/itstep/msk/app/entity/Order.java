@@ -1,6 +1,7 @@
 package org.itstep.msk.app.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -11,30 +12,46 @@ public class Order {
     @Column(columnDefinition = "int unsigned")
     private Long id;
 
-    @Column(name = "waiter_name")
-    private String waiterName;
+    @Column(name = "order_date")
+    @Temporal(TemporalType.DATE)
+    private Date orderDate;
 
-    @OneToMany(targetEntity = OrdersDishes.class, mappedBy = "id")
-    private List<OrdersDishes> ordersDishes;
+    @Column(name = "active", nullable = false, columnDefinition = "BIT")
+    private Boolean active = true;
+
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @OneToMany(targetEntity = OrderDish.class, mappedBy = "id")
+    private List<OrderDish> ordersDishes;
 
     public Long getId() {
         return id;
     }
 
-    public String getWaiterName() {
-        return waiterName;
-    }
-
-    public void setWaiterName(String waiterName) {
-        this.waiterName = waiterName;
-    }
-
-    public List<OrdersDishes> getOrdersDishes() {
+    public List<OrderDish> getOrdersDishes() {
         return ordersDishes;
     }
 
-    public void setOrdersDishes(List<OrdersDishes> ordersDishes) {
+    public void setOrdersDishes(List<OrderDish> ordersDishes) {
         this.ordersDishes = ordersDishes;
+    }
+
+    public Date getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
 

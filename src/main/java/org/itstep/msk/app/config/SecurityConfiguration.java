@@ -1,5 +1,6 @@
 package org.itstep.msk.app.config;
 
+import org.itstep.msk.app.enums.Role;
 import org.itstep.msk.app.service.MyBCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,12 +31,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder authentication) throws Exception {
         String userQuery = "SELECT username, password, 1 AS active FROM users WHERE username = ?";
-        String roleQuery = "SELECT u.username, r.role "
+        String roleQuery =
+                "SELECT u.username, ur.role "
                 + "FROM users u "
-                + "INNER JOIN users_roles ur ON ur.user_id = u.id "
-                + "INNER JOIN roles r ON r.id = "
-                + "ur.role_id "
-                + "WHERE username = ?";
+                + "INNER JOIN user_roles ur ON ur.user_id = u.id "
+                + "WHERE u.username = ?";
 
         authentication.jdbcAuthentication()
                 .dataSource(dataSource)
@@ -47,14 +47,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
-                .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/menu").permitAll()
+                .antMatchers("/registration").permitAll()
                 .antMatchers("/denied").permitAll()
-                .antMatchers("/").permitAll()
+                .antMatchers("/admin/**").permitAll()
+//                .antMatchers("/admin/**").hasAnyAuthority(Role.ROLE_ADMIN.name())
+//                .antMatchers("/manager/**").hasAnyAuthority(Role.ROLE_MANAGER.name())
                 .anyRequest().permitAll();
-//                .anyRequest().authenticated();
 
         httpSecurity.csrf().disable();
 
@@ -70,6 +69,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login");
 
         httpSecurity.exceptionHandling()
-                .accessDeniedPage("/denied");
+                .accessDeniedPage("/error");
     }
 }

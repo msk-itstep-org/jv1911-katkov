@@ -4,11 +4,14 @@ create table dishes (
     photo varchar(100) null,
     cost int not null,
     description varchar(255) null,
-    menu_id int not null
+    active bit default true,
+    menu_id int not null,
+    photo_id int null references uploads (id)
 );
 
 create table ingredients (
     id int unsigned unique not null auto_increment primary key,
+    active bit default true,
     name varchar(100)
 );
 
@@ -19,23 +22,44 @@ create table dishes_ingredients (
     weight double not null
 );
 
-insert into dishes
-(`id`, `name`, `photo`, `cost`, `description`, `menu_id`)
-values
-(1, 'Бекон с сыром в духовке', '/images/upload/dishesMain/hotSnakes/Бекон с сыром в духовке.jpg', '250', 'Яго-го', '6'),
-(2, 'Жульен с курицей в тарталетках', '/images/upload/dishesMain/hotSnakes/Жульен с курицей в тарталетках.jpg', '230', 'Вово', '6'),
-(3, 'Закуска из баклажан пикантная', '/images/upload/dishesMain/hotSnakes/Закуска из баклажан пикантная.jpg', '200', 'Бакл', '6'),
-(4, 'Креветки в кляре', '/images/upload/dishesMain/hotSnakes/Креветки в кляре.jpg', '270', 'Вакл', '6'),
-(5, 'Свиные ребрышки на сковороде', '/images/upload/dishesMain/hotSnakes/Свиные ребрышки на сковороде.jpg', '300', 'Закл', '6'),
-(6, 'Сырные палочки', '/images/upload/dishesMain/hotSnakes/Сырные палочки.jpg', '150', 'Дакл', '6');
+create table uploads (
+     id int unsigned not null auto_increment primary key,
+     filename varchar(255) not null,
+     original_filename varchar(255) not null,
+     content_type varchar(255) not null
+);
 
 insert into dishes
-(`id`, `name`, `photo`, `cost`, `description`, `menu_id`)
+(`id`, `name`, `photo`, `cost`, `description`, `menu_id`, photo_id)
 values
-(7, 'Буйабес', '/images/upload/dishesMain/soups/Буйабес.jpg', '320', 'Супец с креветкой', '7'),
-(8, 'Свекольник с мясом', '/images/upload/dishesMain/soups/Свекольник с мясом.jpg', '230', 'Мясцо', '7'),
-(9, 'Сырный суп пюре с курицей', '/images/upload/dishesMain/soups/Сырный суп пюре с курицей.jpg', '250', 'Куре', '7'),
-(10, 'Турецкий суп с булгуром', '/images/upload/dishesMain/soups/Турецкий суп с булгуром.jpg', '300', 'Ваще', '7');
+(1, 'Бекон с сыром в духовке', '/images/upload/dishesMain/hotSnakes/Бекон с сыром в духовке.jpg', '250', 'Яго-го', '6', 5),
+(2, 'Жульен с курицей в тарталетках', '/images/upload/dishesMain/hotSnakes/Жульен с курицей в тарталетках.jpg', '230', 'Вово', '6', 6),
+(3, 'Закуска из баклажан пикантная', '/images/upload/dishesMain/hotSnakes/Закуска из баклажан пикантная.jpg', '200', 'Бакл', '6', 7),
+(4, 'Креветки в кляре', '/images/upload/dishesMain/hotSnakes/Креветки в кляре.jpg', '270', 'Вакл', '6', 8),
+(5, 'Свиные ребрышки на сковороде', '/images/upload/dishesMain/hotSnakes/Свиные ребрышки на сковороде.jpg', '300', 'Закл', '6', 9),
+(6, 'Сырные палочки', '/images/upload/dishesMain/hotSnakes/Сырные палочки.jpg', '150', 'Дакл', '6', 10);
+
+insert into dishes
+(`id`, `name`, `photo`, `cost`, `description`, `menu_id`, photo_id)
+values
+(7, 'Буйабес', '/images/upload/dishesMain/soups/Буйабес.jpg', '320', 'Супец с креветкой', '7', 1),
+(8, 'Свекольник с мясом', '/images/upload/dishesMain/soups/Свекольник с мясом.jpg', '230', 'Мясцо', '7', 2),
+(9, 'Сырный суп пюре с курицей', '/images/upload/dishesMain/soups/Сырный суп пюре с курицей.jpg', '250', 'Куре', '7', 3),
+(10, 'Турецкий суп с булгуром', '/images/upload/dishesMain/soups/Турецкий суп с булгуром.jpg', '300', 'Ваще', '7', 4);
+
+insert into uploads
+(id, filename, original_filename, content_type)
+values
+(1, 'Буйабес.jpg', 'Буйабес.jpg', 'image/jpeg'),
+(2, 'Свекольник с мясом.jpg', 'Свекольник с мясом.jpg', 'image/jpeg'),
+(3, 'Сырный суп пюре с курицей.jpg', 'Сырный суп пюре с курицей.jpg', 'image/jpeg'),
+(4, 'Турецкий суп с булгуром.jpg', 'Турецкий суп с булгуром.jpg', 'image/jpeg'),
+(5, 'Бекон с сыром в духовке.jpg', 'Бекон с сыром в духовке.jpg', 'image/jpeg'),
+(6, 'Жульен с курицей в тарталетках.jpg', 'Жульен с курицей в тарталетках.jpg', 'image/jpeg'),
+(7, 'Закуска из баклажан пикантная.jpg', 'Закуска из баклажан пикантная.jpg', 'image/jpeg'),
+(8, 'Креветки в кляре.jpg', 'Креветки в кляре.jpg', 'image/jpeg'),
+(9, 'Свиные ребрышки на сковороде.jpg', 'Свиные ребрышки на сковороде.jpg', 'image/jpeg'),
+(10, 'Сырные палочки.jpg', 'Сырные палочки.jpg', 'image/jpeg');
 
 insert into ingredients
 (`id`, `name`)

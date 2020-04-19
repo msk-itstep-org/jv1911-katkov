@@ -5,7 +5,11 @@ import java.util.Date;
 
 @Entity
 @Table(name = "ingredients_storage")
-public class IngredientsStorage {
+public class IngredientStorage {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column (columnDefinition = "int unsigned")
+    private Long id;
 
     @Column(name = "receipt_date")
     private Date receiptDate;
@@ -20,8 +24,12 @@ public class IngredientsStorage {
     @JoinColumn(name = "ingredients_id", referencedColumnName = "id")
     private Ingredient ingredient;
 
-    @OneToOne(targetEntity = Provider.class)
-    private Provider provider;
+//    @OneToOne(targetEntity = Provider.class)
+//    private Provider provider;
+
+    public Long getId() {
+        return id;
+    }
 
     public Date getReceiptDate() {
         return receiptDate;
@@ -51,11 +59,14 @@ public class IngredientsStorage {
         this.ingredient = ingredient;
     }
 
-    public Provider getProvider() {
-        return provider;
+    public void setReceiptDate(Date receiptDate) {
+        this.receiptDate = receiptDate;
     }
-
-    public void setProvider(Provider provider) {
-        this.provider = provider;
-    }
+//    public Provider getProvider() {
+//        return provider;
+//    }
+//
+//    public void setProvider(Provider provider) {
+//        this.provider = provider;
+//    }
 }

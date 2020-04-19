@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Добавление нового блюда')}"></head>
+<body>
+    <div class="container">
+        <div th:replace="~{fragments/header::header}"></div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <form th:action="@{/admin/dish/add}"  method="post" th:object="${newDish}" enctype="multipart/form-data">
+            <div class="form-group row align-items-center">
+                <div class="col-3"></div>
+                <div class="col-2">
+                    <label for="name"
+                           class="col-form-label">Наименование
+                    </label>
+                </div>
+                <div class="col-4">
+                    <input id="name"
+                           type="text"
+                           th:field="*{name}"
+                           th:class="${errors.containsKey('name')
+                           ? 'form-control form-control-lg is-invalid'
+                           : 'form-control form-control-lg'}"
+                           placeholder="Введите наименование блюда"/>
+                    <ul th:if="${errors.containsKey('name')}">
+                        <li th:each="error : ${errors.get('name')}" th:text="${error}" style="color: darkred"></li>
+                    </ul>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <div class="col-3"></div>
+                <div class="col-2">
+                    <label for="cost"
+                           class="col-2 col-form-label">Цена
+                    </label>
+                </div>
+                <div class="col-4">
+                <input id="cost"
+                       type="number"
+                       th:field="*{cost}"
+                       th:class="${errors.containsKey('cost')
+                           ? 'form-control form-control-lg is-invalid'
+                           : 'form-control form-control-lg'}"
+                       placeholder="Укажите стоимость блюда"/>
+                    <ul th:if="${errors.containsKey('cost')}">
+                        <li th:each="error : ${errors.get('cost')}" th:text="${error}" style="color: darkred"></li>
+                    </ul>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <div class="col-3"></div>
+                <div class="col-2">
+                    <label for="description"
+                           class="col-form-label">Описание
+                    </label>
+                </div>
+                <div class="col-4">
+                    <input id="description"
+                           type="text"
+                           th:field="*{description}"
+                           th:class="${errors.containsKey('description')
+                           ? 'form-control form-control-lg is-invalid'
+                           : 'form-control form-control-lg'}"
+                           placeholder="Введите описание блюда"/>
+                    <ul th:if="${errors.containsKey('description')}">
+                        <li th:each="error : ${errors.get('description')}" th:text="${error}" style="color: darkred"></li>
+                    </ul>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <div class="col-3"></div>
+                <div class="col-2">
+                    <label for="menu"
+                           class="col-form-label">Категория
+                    </label>
+                </div>
+                <div class="col-4">
+                    <select name="menu" id="menu" class="form-control">
+                        <option value="" disabled selected>Выберете категорию</option>
+                        <option
+                                th:each="category : ${menu}"
+                                th:value="${category.id}"
+                                th:text="${category.name}"
+                        ></option>
+                    </select>
+                </div>
+                <div class="col-3"></div>
+            </div>
+
+            <div class="form-group row align-items-center">
+                <div class="col-4"></div>
+                    <button type="submit" class="btn btn-dark col-4">Добавить</button>
+                <div class="col-4"></div>
+            </div>
+        </form>
+
+        <div th:replace="~{fragments/js-connect::js-connect}"></div>
+    </div>
+</body>

@@ -1,4 +1,4 @@
-package org.itstep.msk.app.controller;
+package org.itstep.msk.app.controller.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
