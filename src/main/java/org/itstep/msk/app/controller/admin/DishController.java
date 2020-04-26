@@ -1,8 +1,11 @@
 package org.itstep.msk.app.controller.admin;
 
 import org.itstep.msk.app.entity.*;
+import org.itstep.msk.app.enums.Role;
 import org.itstep.msk.app.repository.*;
+import org.itstep.msk.app.service.ValidationMessagesService;
 import org.itstep.msk.app.service.impl.PaginationServiceImpl;
+import org.itstep.msk.app.service.impl.ValidationMessagesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -13,6 +16,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,6 +52,8 @@ public class DishController {
     @Autowired
     private PaginationServiceImpl paginationService;
 
+    @Autowired
+    private ValidationMessagesServiceImpl validationMessagesService;
 
     @GetMapping("/start")
     public String findAllActiveDishes(
@@ -78,14 +85,32 @@ public class DishController {
         List<Menu> menu = menuRepository.findAllInFinishState();
         model.addAttribute("newDish", newDish);
         model.addAttribute("menu", menu);
+        model.addAttribute("errors", new HashMap<>());
 
         return "admin/dish/add";
     }
 
     @PostMapping("/add")
     public String add(
-            @ModelAttribute Dish newDish
+            @ModelAttribute Dish newDish, BindingResult bindingResult, Model model
     ) {
+        Dish sameName = dishRepository.findByName(newDish.getName());
+        if (sameName != null) {
+            bindingResult.addError(
+                    new FieldError("dish", "name", "Блюдо с таким именем уже существует")
+            );
+        }
+
+        if (bindingResult.hasErrors()) {
+            Map<String, List<String>> errors = new HashMap<>();
+            validationMessagesService.createValidationMessages(bindingResult, errors);
+
+            model.addAttribute("errors", errors);
+            model.addAttribute("newDish", newDish);
+
+            return "admin/dish/add";
+        }
+
         dishRepository.save(newDish);
         dishRepository.flush();
 
@@ -156,19 +181,6 @@ public class DishController {
         System.out.println("contentType - " + file.getContentType());
 
         return "redirect:/admin/dish/edit/" + dish.getId();
-    }
-
-    @GetMapping("/upload/{uploadId}")
-    @ResponseBody
-    public ResponseEntity<Resource> upload(@PathVariable("uploadId") Upload upload) throws MalformedURLException {
-        Path path = Paths.get(uploadsPath).toAbsolutePath().resolve(upload.getFilename());
-        Resource file = new UrlResource(path.toUri());
-
-        if (!file.exists() || !file.isReadable()) {
-            throw new RuntimeException();
-        }
-
-        return ResponseEntity.ok().body(file);
     }
 
     @PostMapping("/save-ingredient/{id}")

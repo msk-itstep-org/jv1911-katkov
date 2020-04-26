@@ -30,7 +30,7 @@
             <td>
                 <img
                     th:if="${dish.dishPhoto != null}"
-                    th:src="@{/admin/dish/upload/{uploadId}(uploadId=${dish.dishPhoto.id})}"
+                    th:src="@{/upload/{uploadId}(uploadId=${dish.dishPhoto.id})}"
                     style="height: 150px; width: 200px"
                 />
             </td >

@@ -1,5 +1,7 @@
 package org.itstep.msk.app.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -12,6 +14,7 @@ public class IngredientStorage {
     private Long id;
 
     @Column(name = "receipt_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date receiptDate;
 

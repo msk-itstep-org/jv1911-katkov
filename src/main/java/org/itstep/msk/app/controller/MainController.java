@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -42,6 +43,7 @@ public class MainController {
 
         model.addAttribute("orders", orders);
         model.addAttribute("currentUsername", principal.getName());
+        addPopoverWithDishAndQuantity(model);
 
         return "index";
     }
@@ -105,7 +107,7 @@ public class MainController {
         orderRepository.save(order);
         orderRepository.flush();
 
-        return "redirect:/main/edit/" + order.getId();
+        return "/main/edit/" + order.getId();
     }
 
     @GetMapping("/main/pay/{id}")
@@ -121,5 +123,20 @@ public class MainController {
         orderRepository.flush();
 
         return "redirect:/";
+    }
+
+    private void addPopoverWithDishAndQuantity(Model model){
+        List<Order> orders = orderRepository.findAllByActiveIsTrueOrderByOrderDate();
+        Map<String,List<String>> dishInOrder = new HashMap<>();
+        for (Order order : orders) {
+            List<String> orderDishes = order.getOrdersDishes()
+                    .stream()
+                    .map(x -> x.getDish().getName() + " - " + x.getQuantity() + " шт.")
+                    .collect(Collectors.toList());
+
+            dishInOrder.put(order.getId().toString(), orderDishes);
+        }
+
+        model.addAttribute("order_dishes", dishInOrder);
     }
 }

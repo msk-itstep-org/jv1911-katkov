@@ -132,14 +132,12 @@ public class UserController {
     ) {
         User sameMail = userRepository.findByEmail(editedUser.getEmail());
         if (sameMail != null && !user.getEmail().equals(editedUser.getEmail())) {
-            System.out.println("First");
             bindingResult.addError(
                     new FieldError("editedUser", "email", "Пользователь с таким адресом электронной почты уже существует")
             );
         }
 
         if (bindingResult.hasErrors()) {
-            System.out.println("Second");
             Map<String, List<String>> errors = new HashMap<>();
             validationMessagesService.createValidationMessages(bindingResult, errors);
 

@@ -22,9 +22,16 @@
         <tbody class="align-middle">
         <tr th:each="order : ${orders}">
             <td th:text="${orderStat.count}"></td>
-            <td th:text="${#dates.format(order.orderDate, 'HH:mm dd.MM.yyyy')}"></td>
+            <td th:text="${#dates.format(order.orderDate, 'HH:mm (dd.MM.yyyy)')}"></td>
             <td th:text="${order.user.username}"></td >
-            <td th:text="${order.getDishesCount()}"></td>
+            <td>
+                <a tabindex="0"
+                   th:attr="data-order-id=${order.id}"
+                   class="btn btn-lg btn-outline-success js-order-popover"
+                   role="button" data-toggle="popover">
+                   Блюда<span th:text="${order.getDishesCount()}" class="badge badge-light"></span></a>
+            </td>
+
             <td>
                 <a th:if="${order.user.username} == ${currentUsername}"
                    th:href="@{/main/edit/{id}(id = ${order.id})}">Редактировать</a>
@@ -42,5 +49,35 @@
     <br/>
     <br/>
     <div th:replace="~{fragments/js-connect::js-connect}"></div>
+
+    <script th:inline="javascript">
+        const orderDishData = [[${order_dishes}]];
+        const orderDishes = {};
+
+        for (let orderId in orderDishData) {
+            const list = $("<ul></ul>");
+
+            orderDishData[orderId].forEach(function (orderDish) {
+
+                const element = $("<li></li>");
+                element.text(orderDish).appendTo(list);
+            });
+
+            orderDishes[orderId] = list;
+        }
+
+        $(function () {
+            $(".js-order-popover").popover({
+                html: true,
+                title: "Список блюд",
+                trigger: "click hover",
+                content: function () {
+                    const orderId = $(this).attr("data-order-id");
+
+                    return orderDishes[orderId];
+                }
+            });
+        })
+    </script>
 </div>
 </body>

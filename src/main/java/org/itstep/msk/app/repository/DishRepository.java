@@ -17,4 +17,6 @@ public interface DishRepository extends JpaRepository<Dish, Long> {
     Page<Dish> findAllByActiveIsTrue(Pageable pageable);
 
     Page<Dish> findAllByActiveIsFalse(Pageable pageable);
+
+    Dish findByName(String name);
 }

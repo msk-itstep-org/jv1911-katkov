@@ -5,6 +5,8 @@ import org.itstep.msk.app.model.DishCount;
 import org.itstep.msk.app.repository.*;
 import org.itstep.msk.app.service.impl.IngredientsQuantityServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class MenuController {
@@ -44,14 +45,16 @@ public class MenuController {
 
     @GetMapping("/menu/{orderId}/{menuId}")
     private String addDish(
+            Model model,
             @PathVariable(name = "orderId") Order order,
-            @PathVariable(name = "menuId") Menu menu,
-            Model model) {
-        List<DishCount> dishCounts = new ArrayList<>();
+            @PathVariable(name = "menuId") Menu menu
+        ) {
+        Map<Dish, Integer> dishCounts = new LinkedHashMap<>();
         List<Dish> dishes = dishRepository.findAllByMenuOrderByName(menu);
+
         for (Dish dish : dishes) {
             Integer count = ingredientsQuantityService.countDishesCanCook(dish);
-            dishCounts.add(new DishCount(dish, count));
+            dishCounts.put(dish, count);
         }
 
         model.addAttribute("dishes", dishes);
