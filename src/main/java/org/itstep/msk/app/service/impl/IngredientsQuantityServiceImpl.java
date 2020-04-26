@@ -1,12 +1,10 @@
 package org.itstep.msk.app.service.impl;
 
-import org.itstep.msk.app.entity.Dish;
-import org.itstep.msk.app.entity.DishIngredient;
-import org.itstep.msk.app.entity.Ingredient;
-import org.itstep.msk.app.entity.IngredientStorage;
+import org.itstep.msk.app.entity.*;
 import org.itstep.msk.app.model.IngrAndQuantity;
 import org.itstep.msk.app.repository.DishIngredientRepository;
 import org.itstep.msk.app.repository.IngredientStorageRepository;
+import org.itstep.msk.app.repository.OrderDishRepository;
 import org.itstep.msk.app.service.IngredientsQuantityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +16,17 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
 
     private DishIngredientRepository dishIngredientRepository;
     private IngredientStorageRepository ingredientStorageRepository;
+    private OrderDishRepository orderDishRepository;
 
     @Autowired
     public IngredientsQuantityServiceImpl(
             DishIngredientRepository dishIngredientRepository,
-            IngredientStorageRepository ingredientStorageRepository
+            IngredientStorageRepository ingredientStorageRepository,
+            OrderDishRepository orderDishRepository
     ) {
         this.dishIngredientRepository = dishIngredientRepository;
         this.ingredientStorageRepository = ingredientStorageRepository;
+        this.orderDishRepository = orderDishRepository;
     }
 
     // Находим сколько ингредиентов осталось на складе для КОНКРЕТНОГО блюда (нужно для отдельного запроса)
@@ -41,6 +42,16 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
         }
 
         return ingredientsInStorage;
+    }
+
+    // Соединение блюд
+    @Override
+    public List<OrderDish> multiplyDish(Order order){
+        List<OrderDish> orderDishes = orderDishRepository.findAllByOrder(order);
+        orderDishes.sort(Comparator.comparingInt(OrderDish::getQuantity));
+        Set<OrderDish> orderDishesSet = new HashSet<> (orderDishes);
+
+        return checkRepeatDish(orderDishes);
     }
 
     // Сколько всего ингредиентов (на будующее для менеджера)
@@ -77,7 +88,6 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
     // вычитаем ВСЕ элементы из имеющихся на складе
     @Override
     public void removeIngredientsFromStorage (Dish dish, Integer dishQuantity) {
-
         // ингредиенты в блюде и их количество
         List<DishIngredient> ingredientsInDishes = getIngredientsByDish(dish);
 
@@ -142,5 +152,31 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
             }
         }
         ingredientStorageRepository.flush();
+    }
+
+    private List<OrderDish> checkRepeatDish(List<OrderDish> orderDishes) {
+        List<OrderDish> resultList = new ArrayList<>();
+
+        if (orderDishes.size() > 1) {
+
+            for (int i = 0; i < orderDishes.size() - 1; i++) {
+
+                if (orderDishes.get(i).getDish().getName().equals(orderDishes.get(i + 1).getDish().getName())) {
+                    orderDishes.get(i + 1)
+                            .setQuantity(orderDishes.get(i).getQuantity() + orderDishes.get(i + 1).getQuantity());
+
+                    if ((i + 1) == orderDishes.size()) {
+                        resultList.add(orderDishes.get(i + 1));
+                    }
+
+                } else {
+                    resultList.add(orderDishes.get(i));
+                }
+            }
+        } else {
+            resultList = orderDishes;
+        }
+
+        return resultList;
     }
 }

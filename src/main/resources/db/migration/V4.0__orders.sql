@@ -2,7 +2,7 @@ create table orders (
 	  id int unsigned unique not null auto_increment primary key,
 	  user_id int unsigned not null references users(id),
 	  active bit default true,
-	  order_date date not null
+	  order_date timestamp not null
 );
 
 create table orders_dishes (

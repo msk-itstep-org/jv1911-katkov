@@ -4,7 +4,6 @@ import org.itstep.msk.app.entity.User;
 import org.itstep.msk.app.enums.Role;
 import org.itstep.msk.app.repository.UserRepository;
 import org.itstep.msk.app.service.MyBCryptPasswordEncoder;
-import org.itstep.msk.app.service.ValidationMessagesService;
 import org.itstep.msk.app.service.impl.PaginationServiceImpl;
 import org.itstep.msk.app.service.impl.ValidationMessagesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +88,7 @@ public class UserController {
 
         if (bindingResult.hasErrors()) {
             Map<String, List<String>> errors = new HashMap<>();
-            validationMessagesService.createValidationMesages(bindingResult, errors);
+            validationMessagesService.createValidationMessages(bindingResult, errors);
 
             newUser.getRoles().add(Role.ROLE_WAITER);
 
@@ -143,7 +141,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             System.out.println("Second");
             Map<String, List<String>> errors = new HashMap<>();
-            validationMessagesService.createValidationMesages(bindingResult, errors);
+            validationMessagesService.createValidationMessages(bindingResult, errors);
 
             if (editedUser.getUsername().equals("admin")) {
                 editedUser.getRoles().add(Role.ROLE_ADMIN);
@@ -165,8 +163,6 @@ public class UserController {
 
             return "admin/user/edit/" + user.getId();
         }
-
-
 
         if (editedUser.getUsername().equals("admin")) {
             editedUser.getRoles().add(Role.ROLE_ADMIN);

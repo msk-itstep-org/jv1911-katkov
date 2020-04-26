@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Блюда')}"></head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/header::header}"></div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <table class="table table-bordered text-lg-center table-hover form-control-lg" align="center">
+        <thead class="thead-dark">
+        <tr>
+            <th>№</th>
+            <th>Ингредиент</th>
+            <th>Срок годности</th>
+            <th>Количество</th>
+            <th>Цена за килограмм</th>
+            <th>Удалить</th>
+        </tr>
+        </thead>
+        <tbody class="align-middle">
+        <tr th:each="ingredientStorage : ${items}">
+            <td th:text="${ingredientStorageStat.count} + ${page} * ${pageValue}"></td>
+            <td th:text="${ingredientStorage.ingredient.name}"></td>
+            <td th:text="${#dates.format(ingredientStorage.receiptDate, 'dd.MM.yyyy')}"></td >
+            <td th:text="${ingredientStorage.quantity}"></td >
+            <td th:text="${ingredientStorage.priceForKilo}"></td >
+            <td>
+                <a th:href="@{/manager/delete/{id}(id = ${ingredientStorage.id})}">Удалить</a>
+            </td>
+        </tr>
+         </tbody>
+    </table>
+    </br>
+    <a th:href="@{/manager/add/}" class="btn btn-dark btn-lg" role="button">Добавить новый ингредиент</a>
+    <br/>
+    <br/>
+    <nav>
+        <ul class="pagination pagination-lg">
+            <li th:class="${page == 0 ? 'page-item disabled' : 'page-item'}">
+                <a th:href="@{/manager/start(page=${page - 1})}" class="page-link">&laquo;</a>
+            </li>
+            <li th:each="p : ${pagesRange}" th:class="${p == page ? 'page-item active' : 'page-item'}">
+                <a th:href="@{/manager/start(page=${p})}" class="page-link" th:text="${p + 1}">12</a>
+            </li>
+            <li th:class="${page == pages - 1 ? 'page-item disabled' : 'page-item'}">
+                <a th:href="@{/manager/start(page=${page + 1})}" class="page-link">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+    <div th:replace="~{fragments/js-connect::js-connect}"></div>
+
+    <script th:inline="javascript">
+        const dishIngredientsData = [[${dish_ingredients}]];
+        const dishIngredients = {};
+
+        for (let dishId in dishIngredientsData) {
+            const list = $("<ul></ul>");
+
+            dishIngredientsData[dishId].forEach(function (ingredient) {
+
+                const element = $("<li></li>");
+            element.text(ingredient).appendTo(list);
+        });
+
+            dishIngredients[dishId] = list;
+        }
+
+        $(function () {
+            $(".js-dish-popover").popover({
+                html: true,
+                title: "Список ингредиентов",
+                trigger: "click hover",
+                content: function () {
+                    const dishId = $(this).attr("data-dish-id");
+
+                    return dishIngredients[dishId];
+                }
+            });
+        })
+    </script>
+</div>
+</body>
+

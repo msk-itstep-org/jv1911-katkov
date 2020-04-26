@@ -16,7 +16,7 @@ create table ingredients_storage (
     id int unsigned unique not null auto_increment primary key,
 	  ingredients_id int unsigned not null references ingredients (id),
 #     storage_id int unsigned not null references storage (id),
-    receipt_date timestamp,
+    receipt_date date,
     quantity double,
     price_for_kilo int not null
 #     primary key (ingredients_id, storage_id)

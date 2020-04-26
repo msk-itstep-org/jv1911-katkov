@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Service
 public class ValidationMessagesServiceImpl {
-    public void createValidationMesages(BindingResult bindingResult, Map<String, List<String>> errors) {
+    public void createValidationMessages(BindingResult bindingResult, Map<String, List<String>> errors) {
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
             if (!errors.containsKey(fieldError.getField())) {
                 errors.put(fieldError.getField(), new ArrayList<>());

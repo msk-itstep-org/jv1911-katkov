@@ -12,6 +12,7 @@ public class IngredientStorage {
     private Long id;
 
     @Column(name = "receipt_date")
+    @Temporal(TemporalType.DATE)
     private Date receiptDate;
 
     @Column(name = "quantity")

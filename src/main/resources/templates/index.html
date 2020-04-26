@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Заказы')}"></head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/header::header}"></div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <table class="table table-bordered text-lg-center table-hover form-control-lg" align="center">
+        <thead class="thead-dark">
+        <tr>
+            <th>№ п/п</th>
+            <th>Дата заказа</th>
+            <th>Официант</th>
+            <th>Количество блюд</th>
+            <th>Редактировать</th>
+            <th>Оплачено</th>
+        </tr>
+        </thead>
+        <tbody class="align-middle">
+        <tr th:each="order : ${orders}">
+            <td th:text="${orderStat.count}"></td>
+            <td th:text="${#dates.format(order.orderDate, 'HH:mm dd.MM.yyyy')}"></td>
+            <td th:text="${order.user.username}"></td >
+            <td th:text="${order.getDishesCount()}"></td>
+            <td>
+                <a th:if="${order.user.username} == ${currentUsername}"
+                   th:href="@{/main/edit/{id}(id = ${order.id})}">Редактировать</a>
+                <span th:if="${order.user.username} != ${currentUsername}" style="color: firebrick">Запрещено</span>
+            </td>
+            <td>
+                <a th:if="${order.user.username} == ${currentUsername}"
+                   th:href="@{/main/pay/{id}(id = ${order.id})}">Оплачено</a>
+                <span th:if="${order.user.username} != ${currentUsername}" style="color: firebrick">Запрещено</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/main/add}" class="btn btn-success btn-lg" role="button">Добавить новый заказ</a>
+    <br/>
+    <br/>
+    <div th:replace="~{fragments/js-connect::js-connect}"></div>
+</div>
+</body>

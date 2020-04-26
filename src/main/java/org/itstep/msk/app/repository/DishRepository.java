@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface DishRepository extends JpaRepository<Dish, Long> {
 
-    List<Dish> findAllByMenu(Menu menu);
+    List<Dish> findAllByMenuOrderByName(Menu menu);
 
     Page<Dish> findAllByActiveIsTrue(Pageable pageable);
 

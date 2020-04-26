@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Заказы')}"></head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/header::header}"></div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <table class="table table-bordered text-lg-center table-hover form-control-lg" align="center">
+        <thead class="thead-dark">
+        <tr>
+            <th>№ п/п</th>
+            <th>Дата заказа</th>
+            <th>Официант</th>
+            <th>Количество блюд</th>
+            <th>Список блюд</th>
+        </tr>
+        </thead>
+        <tbody class="align-middle">
+        <tr th:each="order : ${items}">
+            <td th:text="${orderStat.count}"></td>
+            <td th:text="${#dates.format(order.orderDate, 'HH:mm dd.MM.yyyy')}"></td>
+            <td th:text="${order.user.username}"></td >
+            <td th:text="${order.getDishesCount()}"></td>
+            <td>
+                <ul th:each="orderDish : ${order.ordersDishes}">
+                    <li th:text="${orderDish.dish.name} + ' - ' + ${orderDish.quantity} + ' шт.'"></li>
+                </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br/>
+    <br/>
+    <ul class="pagination pagination-lg">
+        <li th:class="${page == 0 ? 'page-item disabled' : 'page-item'}">
+            <a th:href="@{/manager/archive(page=${page - 1})}" class="page-link">&laquo;</a>
+        </li>
+        <li th:each="p : ${pagesRange}" th:class="${p == page ? 'page-item active' : 'page-item'}">
+            <a th:href="@{/manager/archive(page=${p})}" class="page-link" th:text="${p + 1}">12</a>
+        </li>
+        <li th:class="${page == pages - 1 ? 'page-item disabled' : 'page-item'}">
+            <a th:href="@{/manager/archive(page=${page + 1})}" class="page-link">&raquo;</a>
+        </li>
+    </ul>
+    </nav>
+    <div th:replace="~{fragments/js-connect::js-connect}"></div>
+</div>
+</body>

@@ -11,7 +11,7 @@
     <br/>
     <br/>
     <section th:insert="@{/category.html} :: category_fragment"
-         th:with="menu = ${roots}"
+         th:with="menu = ${roots}, order = ${order}"
     ></section>
 
     <div th:replace="~{fragments/js-connect::js-connect}"></div>
