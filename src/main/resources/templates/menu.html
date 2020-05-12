@@ -1,33 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="">
 <head>
-    <meta charset="UTF-8">
-    <title>Menu</title>
+    <head th:replace="~{fragments/head::head('Авторизация')}"></head>
 </head>
 <body>
-<h1>Это меню!</h1>
-<section th:include="@{/category.html} :: category_fragment"
+    <div th:replace="~{fragments/header::header}"></div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <section th:insert="@{/category.html} :: category_fragment"
          th:with="menu = ${roots}"
-></section>
+    ></section>
 
-<script src="/js/jQuery.js"></script>
-<script src="/js/menuCategory.js"></script>
+    <div th:replace="~{fragments/js-connect::js-connect}"></div>
+    <script th:src="@{/js/menuCategory.js}"></script>
 </body>
 </html>
 
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="">-->
-<!--<head>-->
-    <!--<meta charset="UTF-8">-->
-    <!--<title>Menu</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Это меню!</h1>-->
-<!--<section th:include="@{/category.html} :: category_fragment"-->
-         <!--th:with="menu = ${roots}"-->
-<!--&gt;</section>-->
-<!--<script src="/js/jQuery.js"></script>-->
-<!--<script src="/js/menuCategory.js"></script>-->
-<!--</body>-->
-<!--</html>-->

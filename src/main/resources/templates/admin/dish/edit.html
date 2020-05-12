@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Редактирование пользователя')}"></head>
+<body>
+    <div class="container">
+        <div th:replace="~{fragments/header::header}"></div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="row">
+            <div class="col-8">
+                <form th:action="@{/admin/dish/save/} + ${dish.id}"
+                      method="post"
+                      th:object="${dish}"
+                      class="form-group">
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-3">
+                                <label for="name"
+                                       class="col-form-label">Наименование
+                                </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="text"
+                                   id="name"
+                                   th:field="*{name}"
+                                   class="form-control form-control-plaintext text-center"
+                                   readonly>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-3">
+                           <span class=" col-form-label">Изображение</span>
+                        </div>
+                        <div class="col-6 align-content-center">
+                            <img th:if="${dish.dishPhoto != null}"
+                                 th:src="@{/admin/dish/upload/{uploadId}(uploadId=${dish.dishPhoto.id})}"
+                                 style="height: 150px; width: 200px"/>
+                        </div>
+                        <div class="col"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-3">
+                            <label for="cost"
+                                   class="col-form-label">Цена
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="text"
+                                   id="cost"
+                                   th:field="*{cost}"
+                                   class="form-control">
+                        </div>>
+                        <div class="col"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col"></div>
+                        <div class="col-3">
+                            <label for="description"
+                                   class="col-form-label">Описание
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="text"
+                                   id="description"
+                                   th:field="*{description}"
+                                   class="form-control">
+                        </div>
+                        <div class="col"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-3"></div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-dark">Сохранить</button>
+                        </div>
+                        <div class="col-4">
+                            <a th:href="@{/admin/dish/start/}" class="btn btn-secondary" role="button">Назад</a>
+                        </div>
+                        <div class="col-3"></div>
+                    </div>
+                </form>
+                </br>
+                <form th:action="@{/admin/dish/photo/} + ${dish.id}"
+                      method="post"
+                      class="form-group"
+                      enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="dishPhoto"
+                                   class="col-form-label col-2">Изображение блюда
+                            </label>
+                        </div>
+                        <div class="col-6">
+                            <input type="file"
+                                   name="file"
+                                   id="dishPhoto"
+                                   class="form-control"/>
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-dark">Загрузить изображение</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-4">
+                <form th:action="@{/admin/dish/save-ingredient/} + ${dish.id}"
+                      method="post"
+                      th:object="${newDishIngredient}"
+                      class="form-group">
+                    <div class="row">
+                        <label for="ingredient"
+                           class="col-form-label col-2">Ингредиент
+                        </label>
+                    </div>
+                    <div class="row">
+                        <select name="ingredient" id="ingredient" class="form-control">
+                            <option value="" disabled selected>Выберете ингредиент</option>
+                            <option
+                                    th:each="ingredient : ${ingredients}"
+                                    th:value="${ingredient.id}"
+                                    th:text="${ingredient.name}"
+                            ></option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <label for="weight"
+                           class="col-form-label">Вес ингредиента
+                        </label>
+                    </div>
+                    <div class="row">
+                        <input type="number"
+                               id="weight"
+                               th:field="*{weight}"
+                               class="form-control"
+                               placeholder="Выберите ингредиент">
+                    </div>
+                    </br>
+                    <div class="row">
+                        <div class="col"></div>
+                            <button type="submit" class="btn btn-dark col-10">Добавить ингредиент</button>
+                        <div class="col"></div>
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="col-12">
+                        <ul th:each="dishesIngredient : ${dish.dishesIngredients}">
+                            <li th:text="${dishesIngredient.ingredient.name} + ' ' + ${dishesIngredient.weight} + ' г'"></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+    </div>
+        <div th:replace="~{fragments/js-connect::js-connect}"></div>
+    </div>
+</body>

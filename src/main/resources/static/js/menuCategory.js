@@ -1,6 +1,6 @@
 $("section").children().find("section").hide();
 
-$("img")
+$(".js-image")
     .width(220)
     .height(150)
     .click(function (event) {

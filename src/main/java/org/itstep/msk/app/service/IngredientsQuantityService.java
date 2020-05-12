@@ -1,12 +1,16 @@
 package org.itstep.msk.app.service;
 
-import org.itstep.msk.app.entity.Ingredient;
+import org.itstep.msk.app.entity.Dish;
+import org.itstep.msk.app.model.IngrAndQuantity;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IngredientsQuantityService {
-    Map<Ingredient, Integer> countIngredientsQuantityRest(Long dishId);
+    List<IngrAndQuantity> countIngredientsQuantityRest(Dish dish);
 
-    void minusIngredients(List<Ingredient> ingredients);
+    List<IngrAndQuantity> countAllIngredients();
+
+    Integer countDishesCanCook (Dish dish);
+
+    void removeIngredientsFromStorage (Dish dish, Integer dishQuantity);
 }

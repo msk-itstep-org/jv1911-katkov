@@ -23,6 +23,7 @@ public class Menu {
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     private Menu parent;
 
+    @OrderBy("name ASC ")
     @OneToMany(targetEntity = Menu.class, mappedBy = "parent")
     private List<Menu> children;
 
