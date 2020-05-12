@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Неверные данные</title>
-</head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Доступ запрещен')}"></head>
 <body>
-    <h1>Неверные имя пользователя или пароль</h1>
-    <img src="/images/upload/accessDenied.jpg">
-
-
+    <div class="container">
+        <div th:replace="~{fragments/header::header}"></div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <h1>Недопустимое имя пользователя или пароль</h1>
+        <img src="/images/upload/denied_men.jpg" style="width: 50%">
+    </div>
 </body>
 </html>

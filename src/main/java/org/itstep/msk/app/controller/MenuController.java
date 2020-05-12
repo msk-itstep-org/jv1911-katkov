@@ -9,10 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.*;
@@ -49,13 +46,8 @@ public class MenuController {
             @PathVariable(name = "orderId") Order order,
             @PathVariable(name = "menuId") Menu menu
         ) {
-        Map<Dish, Integer> dishCounts = new LinkedHashMap<>();
         List<Dish> dishes = dishRepository.findAllByMenuOrderByName(menu);
-
-        for (Dish dish : dishes) {
-            Integer count = ingredientsQuantityService.countDishesCanCook(dish);
-            dishCounts.put(dish, count);
-        }
+        Map<Dish, Integer> dishCounts = countDishCanCookPart(dishes);
 
         model.addAttribute("dishes", dishes);
         model.addAttribute("menu", menu);
@@ -65,7 +57,7 @@ public class MenuController {
         return "main/order";
     }
 
-    @PostMapping("/main/add-to-order/{id}")
+        @PostMapping("/main/add-to-order/{id}")
     private String addToOrder(
             @PathVariable(name = "id") Order order,
             @RequestParam String dishId,
@@ -93,8 +85,18 @@ public class MenuController {
         orderDish.setQuantity(Integer.parseInt(quantity));
         saveOrderAndOrderDish(order, orderDish, quantity);
 
-
         return "redirect:/menu/" + order.getId() + "/" + dish.getMenu().getId();
+    }
+
+    private Map<Dish, Integer> countDishCanCookPart(List<Dish> dishes) {
+        Map<Dish, Integer> dishCounts = new LinkedHashMap<>();
+
+        for (Dish dish : dishes) {
+            Integer count = ingredientsQuantityService.countDishesCanCook(dish);
+            dishCounts.put(dish, count);
+        }
+
+        return dishCounts;
     }
 
     private void saveOrderAndOrderDish(Order order, OrderDish orderDish, String quantity) {
@@ -108,5 +110,3 @@ public class MenuController {
                 Integer.parseInt(quantity));
     }
 }
-
-

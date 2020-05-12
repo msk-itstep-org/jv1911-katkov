@@ -33,15 +33,19 @@
             <td>
                 <a tabindex="0"
                    th:attr="data-dish-id=${dish.id}"
-                   class="btn btn-lg btn-success js-dish-popover"
+                   class="btn btn-lg btn-success btn-outline-success js-dish-popover"
                    role="button" data-toggle="popover">
-                   Ингредиенты<span th:text="${dish.dishesIngredients.size()}" class="badge badge-light"></span></a>
+                   <span th:text="${dish.dishesIngredients.size()}" class="badge badge-light"></span></a>
             </td>
             <td>
-                <a th:href="@{/admin/dish/return/{id}(id = ${dish.id})}">Восстановить</a>
+                <a th:href="@{/admin/dish/return/{id}(id = ${dish.id})}">
+                    <i class="fa fa-reply-all" aria-hidden="true"></i>
+                </a>
             </td>
             <td>
-                <a th:href="@{/admin/dish/finish-delete/{id}(id = ${dish.id})}">Удалить</a>
+                <a th:href="@{/admin/dish/finish-delete/{id}(id = ${dish.id})}">
+                    <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                </a>
             </td>
         </tr>
          </tbody>

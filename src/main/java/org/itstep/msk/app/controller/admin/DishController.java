@@ -1,19 +1,14 @@
 package org.itstep.msk.app.controller.admin;
 
 import org.itstep.msk.app.entity.*;
-import org.itstep.msk.app.enums.Role;
 import org.itstep.msk.app.repository.*;
-import org.itstep.msk.app.service.ValidationMessagesService;
 import org.itstep.msk.app.service.impl.PaginationServiceImpl;
 import org.itstep.msk.app.service.impl.ValidationMessagesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -73,7 +67,7 @@ public class DishController {
             Model model
     ) {
         Page<Dish> dishes = dishRepository.findAllByActiveIsFalse(pageable);
-        paginationService.addToModelWithPagination(model, dishes, pageable);
+       paginationService.addToModelWithPagination(model, dishes, pageable);
         addPopoverWithIngredients(model);
 
         return "admin/dish/archive";
@@ -123,7 +117,7 @@ public class DishController {
             Model model
     ) {
         DishIngredient newDishIngredient = new DishIngredient();
-        List<Ingredient> ingredients = ingredientRepository.findAll();
+        List<Ingredient> ingredients = ingredientRepository.findAllByActiveIsTrueOrderByName();
         model.addAttribute("dish", dish);
         model.addAttribute("ingredients", ingredients);
         model.addAttribute("newDishIngredient", newDishIngredient);
@@ -137,7 +131,6 @@ public class DishController {
             @ModelAttribute Dish editedDish
     ) {
         dish.setName(editedDish.getName());
-        dish.setPhoto(editedDish.getPhoto());
         dish.setCost(editedDish.getCost());
         dish.setDescription(editedDish.getDescription());
         dish.setActive(editedDish.getActive());
@@ -145,7 +138,7 @@ public class DishController {
         dishRepository.save(dish);
         dishRepository.flush();
 
-        return "redirect:/admin/dish/edit/" + dish.getId();
+        return "redirect:/admin/dish/start/";
     }
 
     @PostMapping("/photo/{id}")
@@ -176,10 +169,6 @@ public class DishController {
         dishRepository.save(dish);
         dishRepository.flush();
 
-        System.out.println("filename - " + filename);
-        System.out.println("original file name - " + file.getOriginalFilename());
-        System.out.println("contentType - " + file.getContentType());
-
         return "redirect:/admin/dish/edit/" + dish.getId();
     }
 
@@ -200,6 +189,16 @@ public class DishController {
         dishRepository.flush();
 
         return "redirect:/admin/dish/edit/" + dish.getId();
+    }
+
+    @GetMapping("/delete-ingredient/{id}")
+    public String deleteIngredient(
+            @PathVariable(name = "id") DishIngredient dishIngredient
+    ) {
+        dishIngredientRepository.delete(dishIngredient);
+        dishIngredientRepository.flush();
+
+        return "redirect:/admin/dish/edit/" + dishIngredient.getDish().getId();
     }
 
     @GetMapping("/delete/{id}")

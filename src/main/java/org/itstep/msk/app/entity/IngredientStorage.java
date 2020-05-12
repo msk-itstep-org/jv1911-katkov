@@ -19,17 +19,14 @@ public class IngredientStorage {
     private Date receiptDate;
 
     @Column(name = "quantity")
-    private Double quantity;
+    private Integer quantity;
 
-    @Column(name = "price_for_kilo")
-    private Integer priceForKilo;
+    @Column(name = "quantity_used")
+    private Integer quantityUsed = 0;
 
     @ManyToOne(targetEntity = Ingredient.class)
     @JoinColumn(name = "ingredients_id", referencedColumnName = "id")
     private Ingredient ingredient;
-
-//    @OneToOne(targetEntity = Provider.class)
-//    private Provider provider;
 
     public Long getId() {
         return id;
@@ -39,20 +36,12 @@ public class IngredientStorage {
         return receiptDate;
     }
 
-    public Double getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Double quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public Integer getPriceForKilo() {
-        return priceForKilo;
-    }
-
-    public void setPriceForKilo(Integer priceForKilo) {
-        this.priceForKilo = priceForKilo;
     }
 
     public Ingredient getIngredient() {
@@ -65,6 +54,14 @@ public class IngredientStorage {
 
     public void setReceiptDate(Date receiptDate) {
         this.receiptDate = receiptDate;
+    }
+
+    public Integer getQuantityUsed() {
+        return quantityUsed;
+    }
+
+    public void setQuantityUsed(Integer quantityUsed) {
+        this.quantityUsed = quantityUsed;
     }
 //    public Provider getProvider() {
 //        return provider;

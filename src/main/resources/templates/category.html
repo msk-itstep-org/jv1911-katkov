@@ -5,7 +5,7 @@
             <img th:src="${category.image}" class="js-image"/>
             <a th:if="${category.children.empty}"
                th:href="@{/menu/{orderId}/{menuId}((orderId = ${order.id}), menuId = ${category.id})}">
-                <span>          <img th:src="@{/images/upload/greenArrow.jpg}" style="width: 100px"></span>
+                <span>          <img th:src="@{/images/upload/greenArrowLeft.jpg}" style="width: 50px"></span>
             </a>
             <a th:unless="${category.children.empty}">
                 <span>          <img th:src="@{/images/upload/redArrow.jpg}" style="width: 50px"></span>

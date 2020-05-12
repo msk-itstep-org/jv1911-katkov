@@ -29,18 +29,26 @@
                    th:attr="data-order-id=${order.id}"
                    class="btn btn-lg btn-outline-success js-order-popover"
                    role="button" data-toggle="popover">
-                   Блюда<span th:text="${order.getDishesCount()}" class="badge badge-light"></span></a>
+                   <span white-space="nowrap" th:text="${order.getDishesCount()}" class="badge badge-light"></span></a>
             </td>
 
             <td>
                 <a th:if="${order.user.username} == ${currentUsername}"
-                   th:href="@{/main/edit/{id}(id = ${order.id})}">Редактировать</a>
-                <span th:if="${order.user.username} != ${currentUsername}" style="color: firebrick">Запрещено</span>
+                   th:href="@{/main/edit/{id}(id = ${order.id})}">
+                    <i style="color: black" class="fa fa-pencil-alt" aria-hidden="true"></i>
+                </a>
+                <span th:if="${order.user.username} != ${currentUsername}" style="color: firebrick">
+                   <i class="fa fa-times" aria-hidden="true"></i>
+                </span>
             </td>
             <td>
                 <a th:if="${order.user.username} == ${currentUsername}"
-                   th:href="@{/main/pay/{id}(id = ${order.id})}">Оплачено</a>
-                <span th:if="${order.user.username} != ${currentUsername}" style="color: firebrick">Запрещено</span>
+                   th:href="@{/main/pay/{id}(id = ${order.id})}">
+                    <i style="color: black" class="fa fa-credit-card" aria-hidden="true"></i>
+                </a>
+                <span th:if="${order.user.username} != ${currentUsername}" style="color: firebrick">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </span>
             </td>
         </tr>
         </tbody>

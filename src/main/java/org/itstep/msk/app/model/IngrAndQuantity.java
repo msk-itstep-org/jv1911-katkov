@@ -4,9 +4,9 @@ import org.itstep.msk.app.entity.Ingredient;
 
 public class IngrAndQuantity {
     private Ingredient ingredient;
-    private Double quantity;
+    private Integer quantity;
 
-    public IngrAndQuantity(Ingredient ingredient, Double quantity) {
+    public IngrAndQuantity(Ingredient ingredient, Integer quantity) {
         this.ingredient = ingredient;
         this.quantity = quantity;
     }
@@ -19,11 +19,11 @@ public class IngrAndQuantity {
         this.ingredient = ingredient;
     }
 
-    public Double getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Double quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

@@ -4,29 +4,26 @@ import org.itstep.msk.app.entity.*;
 import org.itstep.msk.app.model.IngrAndQuantity;
 import org.itstep.msk.app.repository.DishIngredientRepository;
 import org.itstep.msk.app.repository.IngredientStorageRepository;
-import org.itstep.msk.app.repository.OrderDishRepository;
 import org.itstep.msk.app.service.IngredientsQuantityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class IngredientsQuantityServiceImpl implements IngredientsQuantityService {
 
     private DishIngredientRepository dishIngredientRepository;
     private IngredientStorageRepository ingredientStorageRepository;
-    private OrderDishRepository orderDishRepository;
 
     @Autowired
     public IngredientsQuantityServiceImpl(
             DishIngredientRepository dishIngredientRepository,
-            IngredientStorageRepository ingredientStorageRepository,
-            OrderDishRepository orderDishRepository
+            IngredientStorageRepository ingredientStorageRepository
     ) {
         this.dishIngredientRepository = dishIngredientRepository;
         this.ingredientStorageRepository = ingredientStorageRepository;
-        this.orderDishRepository = orderDishRepository;
     }
 
     // Находим сколько ингредиентов осталось на складе для КОНКРЕТНОГО блюда (нужно для отдельного запроса)
@@ -43,32 +40,22 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
 
         return ingredientsInStorage;
     }
-
-    // Соединение блюд
-    @Override
-    public List<OrderDish> multiplyDish(Order order){
-        List<OrderDish> orderDishes = orderDishRepository.findAllByOrder(order);
-        orderDishes.sort(Comparator.comparingInt(OrderDish::getQuantity));
-        Set<OrderDish> orderDishesSet = new HashSet<> (orderDishes);
-
-        return checkRepeatDish(orderDishes);
-    }
-
-    // Сколько всего ингредиентов (на будующее для менеджера)
-    @Override
-    public List<IngrAndQuantity> countAllIngredients() {
-        List<IngredientStorage> ingredientStorages = ingredientStorageRepository.findAll();
-        Set<IngrAndQuantity> ingrAndQuantityHashSet = new HashSet<>();
-
-        for (IngredientStorage ingredientStorage : ingredientStorages) {
-            IngrAndQuantity ingrAndQuantity = countRestIngrInStorage(ingredientStorage.getIngredient());
-            ingrAndQuantityHashSet.add(ingrAndQuantity);
-        }
-        ArrayList<IngrAndQuantity> result = new ArrayList<>(ingrAndQuantityHashSet);
-        result.sort(Comparator.comparing(x -> x.getIngredient().toString()));
-
-        return result;
-    }
+//
+//    // Сколько всего ингредиентов (на будующее для менеджера)
+//    @Override
+//    public List<IngrAndQuantity> countAllIngredients() {
+//        List<IngredientStorage> ingredientStorages = ingredientStorageRepository.findAll();
+//        Set<IngrAndQuantity> ingrAndQuantityHashSet = new HashSet<>();
+//
+//        for (IngredientStorage ingredientStorage : ingredientStorages) {
+//            IngrAndQuantity ingrAndQuantity = countRestIngrInStorage(ingredientStorage.getIngredient());
+//            ingrAndQuantityHashSet.add(ingrAndQuantity);
+//        }
+//        ArrayList<IngrAndQuantity> result = new ArrayList<>(ingrAndQuantityHashSet);
+//        result.sort(Comparator.comparing(x -> x.getIngredient().toString()));
+//
+//        return result;
+//    }
     // Сколько блюд еще можно приготовить
     @Override
     public Integer countDishesCanCook (Dish dish) {
@@ -77,7 +64,7 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
         for(DishIngredient oneDI : dishesIngredients) {
             //сколько ингредиента есть на складе
             IngrAndQuantity oneIngredient = countRestIngrInStorage(oneDI.getIngredient());
-            double count = Math.floor(oneIngredient.getQuantity() / oneDI.getWeight());
+            int count = (int) (oneIngredient.getQuantity() / oneDI.getWeight());
             if (count < result) {
                 result = count;
             }
@@ -85,7 +72,7 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
         return (int) result;
     }
 
-    // вычитаем ВСЕ элементы из имеющихся на складе
+    // вычитаем ВСЕ элементы из имеющихся на складе для конкретного блюда и количества блюд
     @Override
     public void removeIngredientsFromStorage (Dish dish, Integer dishQuantity) {
         // ингредиенты в блюде и их количество
@@ -99,6 +86,19 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
         }
     }
 
+    @Override
+    public void returnIngredientsToStorage(Dish dish, Integer dishQuantity) {
+        // ингредиенты в блюде и их количество
+        List<DishIngredient> ingredientsInDishes = getIngredientsByDish(dish);
+
+        for (DishIngredient ingredientsInDish : ingredientsInDishes) {
+            returnOneIngredient(
+                    ingredientsInDish.getIngredient(),
+                    ingredientsInDish.getWeight() * dishQuantity
+            );
+        }
+    }
+
     // узнать какие ингредиенты есть в блюде (мы знаем ингредиенты и их вес)
     private List<DishIngredient> getIngredientsByDish(Dish dish) {
         return dishIngredientRepository.findAllByDish(dish);
@@ -106,8 +106,10 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
 
     // берем ОДИН ингредиент и считаем сколько его есть на складе
     private IngrAndQuantity countRestIngrInStorage(Ingredient ingredient) {
-        List<IngredientStorage> storagesIngr = ingredientStorageRepository.findAllByIngredient(ingredient);
-        double sumOfQuantity = 0.0;
+        List<IngredientStorage> storagesIngr = ingredientStorageRepository
+                .findAllByIngredientOrderByReceiptDate(ingredient);
+        //TODO Фильтр по просроченным
+        int sumOfQuantity = 0;
         for (IngredientStorage storage : storagesIngr) {
             sumOfQuantity += storage.getQuantity();
         }
@@ -115,68 +117,65 @@ public class IngredientsQuantityServiceImpl implements IngredientsQuantityServic
     }
 
     // вычитаем ОДИН ингредиент из имеющиехся на складе
-    private void removeOneIngredient(Ingredient ingredient, Double quantityOfOrder) {
-        List<IngredientStorage> storagesIngrs = ingredientStorageRepository.findAllByIngredient(ingredient);
-        storagesIngrs.sort((x, y) -> {
-            if (x.getReceiptDate().before(y.getReceiptDate())) {
-                return 1;
-            } else if (x.getReceiptDate().after(y.getReceiptDate())) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
+    private void removeOneIngredient(Ingredient ingredient, Integer quantityOfOrder) {
+        List<IngredientStorage> storagesIngrs = ingredientStorageRepository
+                .findAllByIngredientOrderByReceiptDate(ingredient);
 
         // Проверка сколько всего ингредиентов есть на складе
         if (quantityOfOrder > countRestIngrInStorage(ingredient).getQuantity()) {
             throw new RuntimeException("WTF");
         }
 
-        double ingrWeight = quantityOfOrder;
-        IngredientStorage result = new IngredientStorage();
+        int ingrWeight = quantityOfOrder;
 
         for (IngredientStorage storagesIngr : storagesIngrs) {
+            int currentIngrQuantity = storagesIngr.getQuantity();
 
-            double currentIngrQuantity = storagesIngr.getQuantity();
             if (currentIngrQuantity >= ingrWeight) {
-                result.setQuantity(currentIngrQuantity - ingrWeight);
-                result.setIngredient(ingredient);
-                result.setPriceForKilo(storagesIngr.getPriceForKilo());
-                result.setReceiptDate(storagesIngr.getReceiptDate());
-                ingredientStorageRepository.delete(storagesIngr);
-                ingredientStorageRepository.save(result);
+                int usedIngredient = storagesIngr.getQuantityUsed();
+                storagesIngr.setQuantityUsed(usedIngredient + ingrWeight);
+                storagesIngr.setQuantity(currentIngrQuantity - ingrWeight);
+                ingredientStorageRepository.save(storagesIngr);
                 break;
             } else {
-                ingredientStorageRepository.delete(storagesIngr);
+                storagesIngr.setQuantityUsed(storagesIngr.getQuantityUsed() + currentIngrQuantity);
+                storagesIngr.setQuantity(0);
                 ingrWeight -= currentIngrQuantity;
+                ingredientStorageRepository.save(storagesIngr);
             }
         }
         ingredientStorageRepository.flush();
     }
 
-    private List<OrderDish> checkRepeatDish(List<OrderDish> orderDishes) {
-        List<OrderDish> resultList = new ArrayList<>();
+    // возвращаеи ОДИН ингредиент на склад
+    private void returnOneIngredient(Ingredient ingredient, Integer quantityOfOrder) {
+        // нашли все оставшиеся игнгедиенты на складе и отсортировале по дате
+        List<IngredientStorage> storagesIngrs = ingredientStorageRepository
+                .findAllByIngredientOrderByReceiptDate(ingredient);
 
-        if (orderDishes.size() > 1) {
+        // TODO нужно добавить в условие запроса
+        storagesIngrs = storagesIngrs
+                .stream()
+                .filter(x -> x.getQuantityUsed() > 0)
+                .collect(Collectors.toList());
 
-            for (int i = 0; i < orderDishes.size() - 1; i++) {
+        int ingrWeight = quantityOfOrder;
+        for (IngredientStorage storagesIngr : storagesIngrs) {
+            int currentUsedQuantity = storagesIngr.getQuantityUsed();
 
-                if (orderDishes.get(i).getDish().getName().equals(orderDishes.get(i + 1).getDish().getName())) {
-                    orderDishes.get(i + 1)
-                            .setQuantity(orderDishes.get(i).getQuantity() + orderDishes.get(i + 1).getQuantity());
-
-                    if ((i + 1) == orderDishes.size()) {
-                        resultList.add(orderDishes.get(i + 1));
-                    }
-
-                } else {
-                    resultList.add(orderDishes.get(i));
-                }
+            if (currentUsedQuantity >= ingrWeight) {
+                storagesIngr.setQuantityUsed(currentUsedQuantity - ingrWeight);
+                storagesIngr.setQuantity(storagesIngr.getQuantity() + ingrWeight);
+                ingredientStorageRepository.save(storagesIngr);
+                System.out.println(storagesIngr.getIngredient().getName());
+                break;
+            } else {
+                storagesIngr.setQuantity(storagesIngr.getQuantity() + currentUsedQuantity);
+                storagesIngr.setQuantityUsed(0);
+                ingrWeight -= currentUsedQuantity;
+                ingredientStorageRepository.save(storagesIngr);
             }
-        } else {
-            resultList = orderDishes;
         }
-
-        return resultList;
+        ingredientStorageRepository.flush();
     }
 }

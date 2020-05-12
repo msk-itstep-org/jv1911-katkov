@@ -21,7 +21,9 @@
             <td th:text="${ingredientStat.count} + ${page} * ${pageValue}"></td>
             <td th:text="${ingredient.name}"></td>
             <td>
-                <a th:href="@{/admin/ingredient/delete/{id}(id = ${ingredient.id})}">Удалить</a>
+                <a th:href="@{/admin/ingredient/delete/{id}(id = ${ingredient.id})}">
+                    <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                </a>
             </td>
         </tr>
         </tbody>

@@ -22,7 +22,7 @@ public class DishIngredient {
     private Ingredient ingredient;
 
     @Column
-    private Double weight;
+    private Integer weight;
 
     public Long getId() {
         return id;
@@ -44,11 +44,11 @@ public class DishIngredient {
         this.ingredient = ingredient;
     }
 
-    public Double getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 }

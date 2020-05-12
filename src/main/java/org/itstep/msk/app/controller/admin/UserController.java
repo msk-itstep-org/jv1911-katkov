@@ -54,7 +54,7 @@ public class UserController {
             Model model
     ) {
         Page<User> users = userRepository.findAllByActiveIsFalse(pageable);
-        paginationService.addToModelWithPagination(model, users, pageable);
+       paginationService.addToModelWithPagination(model, users, pageable);
 
         return "admin/user/archive";
     }
@@ -141,20 +141,8 @@ public class UserController {
             Map<String, List<String>> errors = new HashMap<>();
             validationMessagesService.createValidationMessages(bindingResult, errors);
 
-            if (editedUser.getUsername().equals("admin")) {
-                editedUser.getRoles().add(Role.ROLE_ADMIN);
-            }
+            checkAndCreatenewUser(user, editedUser);
 
-            user.setUsername(editedUser.getUsername());
-            user.setPassword(editedUser.getPassword());
-            user.setEmail(editedUser.getEmail());
-            user.getRoles().clear();
-            for (Role role : editedUser.getRoles()) {
-                user.getRoles().add(role);
-            }
-            user.getRoles().add(Role.ROLE_WAITER);
-
-            System.out.println("Third");
             model.addAttribute("errors", errors);
             model.addAttribute("user", user);
             model.addAttribute("roles", Role.values());
@@ -162,18 +150,7 @@ public class UserController {
             return "admin/user/edit/" + user.getId();
         }
 
-        if (editedUser.getUsername().equals("admin")) {
-            editedUser.getRoles().add(Role.ROLE_ADMIN);
-        }
-
-        user.setUsername(editedUser.getUsername());
-        user.setPassword(editedUser.getPassword());
-        user.setEmail(editedUser.getEmail());
-        user.getRoles().clear();
-        for (Role role : editedUser.getRoles()) {
-            user.getRoles().add(role);
-        }
-        user.getRoles().add(Role.ROLE_WAITER);
+        checkAndCreatenewUser(user, editedUser);
 
         userRepository.save(user);
         userRepository.flush();
@@ -222,5 +199,20 @@ public class UserController {
         userRepository.flush();
 
         return "redirect:/admin/user/archive";
+    }
+
+    private void checkAndCreatenewUser(User user, User editedUser) {
+        if (editedUser.getUsername().equals("admin")) {
+            editedUser.getRoles().add(Role.ROLE_ADMIN);
+        }
+
+        user.setUsername(editedUser.getUsername());
+        user.setPassword(editedUser.getPassword());
+        user.setEmail(editedUser.getEmail());
+        user.getRoles().clear();
+        for (Role role : editedUser.getRoles()) {
+            user.getRoles().add(role);
+        }
+        user.getRoles().add(Role.ROLE_WAITER);
     }
 }

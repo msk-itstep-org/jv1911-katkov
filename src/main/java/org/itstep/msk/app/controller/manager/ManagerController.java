@@ -55,7 +55,7 @@ public class ManagerController {
 
     @GetMapping("/add")
     private String addingNewIngredient(Model model) {
-        List<Ingredient> ingredients = ingredientRepository.findAll();
+        List<Ingredient> ingredients = ingredientRepository.findAllByActiveIsTrueOrderByName();
         IngredientStorage newIngredientStorage = new IngredientStorage();
 
         model.addAttribute("newIngredientStorage", newIngredientStorage);

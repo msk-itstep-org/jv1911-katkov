@@ -30,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder authentication) throws Exception {
-        String userQuery = "SELECT username, password, 1 AS active FROM users WHERE username = ?";
+        String userQuery = "SELECT username, password, active FROM users WHERE username = ?";
         String roleQuery =
                 "SELECT u.username, ur.role "
                 + "FROM users u "
@@ -49,8 +49,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/denied").permitAll()
+                .antMatchers("/").permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority(Role.ROLE_ADMIN.name())
-//                .antMatchers("/manager/**").hasAnyAuthority(Role.ROLE_MANAGER.name())
+                .antMatchers("/manager/**").hasAnyAuthority(Role.ROLE_MANAGER.name())
                 .anyRequest().authenticated();
 
         httpSecurity.csrf().disable();

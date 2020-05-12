@@ -19,8 +19,8 @@
                 <th>Изображение блюда</th>
                 <th>Цена, руб.</th>
                 <th>Описание</th>
-                <th>Количество</th>
-                <!--<th>Изменить</th>-->
+                <th>Осталось порций</th>
+                <th>Заказано порций</th>
             </tr>
             </thead>
             <tbody class="align-middle">
@@ -33,15 +33,23 @@
                 </td>
                 <td th:text="${orderDish.dish.cost}"></td >
                 <td th:text="${orderDish.dish.description}"></td >
-                <td th:text="${orderDish.quantity}"></td>
-                <!--<td>-->
-                    <!--<form th:action="@{/main/edit-order/{orderId}(orderId = ${order.id})}" method="post" class="form-group">-->
-                        <!--<input type="number" name="quantity" class="form-control" th:value="${orderDish.quantity}"/>-->
-                        <!--<input type="hidden" name="dishId" th:value="${orderDish.dish.id}"/>-->
-                        <!--<br/>-->
-                        <!--<button type="submit" class="btn btn-outline-success">Изменить</button>-->
-                    <!--</form>-->
-                <!--</td>-->
+                <td th:text="${dishCounts.get(orderDish.dish)}"></td>
+                <td>
+                    <form th:action="@{/main/edit/{orderId}(orderId = ${order.id})}" method="post" class="form-group">
+                        <input type="number"
+                               name="quantity"
+                               th:class="${errors.containsKey('quantity')
+                               ? 'form-control form-control-lg is-invalid'
+                               : 'form-control form-control-lg'}"
+                               th:value="${orderDish.quantity}"/>
+                        <ul th:if="${errors.containsKey('quantity')}">
+                            <li th:each="error : ${errors.get('quantity')}" th:text="${error}" style="color: darkred"></li>
+                        </ul>
+                        <input type="hidden" name="dishId" th:value="${orderDish.dish.id}"/>
+                        <br/>
+                        <button type="submit" class="btn btn-outline-success">Изменить</button>
+                    </form>
+                </td>
             </tr>
             </tbody>
         </table>

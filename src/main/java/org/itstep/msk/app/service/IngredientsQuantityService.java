@@ -10,11 +10,11 @@ import java.util.List;
 public interface IngredientsQuantityService {
     List<IngrAndQuantity> countIngredientsQuantityRest(Dish dish);
 
-    List<IngrAndQuantity> countAllIngredients();
+//    List<IngrAndQuantity> countAllIngredients();
 
     Integer countDishesCanCook (Dish dish);
 
     void removeIngredientsFromStorage (Dish dish, Integer dishQuantity);
 
-    List<OrderDish> multiplyDish(Order order);
+    void returnIngredientsToStorage(Dish dish, Integer dishQuantity);
 }

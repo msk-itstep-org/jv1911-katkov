@@ -15,7 +15,6 @@
             <th>Ингредиент</th>
             <th>Срок годности</th>
             <th>Количество</th>
-            <th>Цена за килограмм</th>
             <th>Удалить</th>
         </tr>
         </thead>
@@ -25,9 +24,10 @@
             <td th:text="${ingredientStorage.ingredient.name}"></td>
             <td th:text="${#dates.format(ingredientStorage.receiptDate, 'dd.MM.yyyy')}"></td >
             <td th:text="${ingredientStorage.quantity}"></td >
-            <td th:text="${ingredientStorage.priceForKilo}"></td >
             <td>
-                <a th:href="@{/manager/delete/{id}(id = ${ingredientStorage.id})}">Удалить</a>
+                <a th:href="@{/manager/delete/{id}(id = ${ingredientStorage.id})}">
+                    <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                </a>
             </td>
         </tr>
          </tbody>

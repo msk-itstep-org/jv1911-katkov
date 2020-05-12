@@ -27,4 +27,9 @@ public class SecurityController {
 
         return "login";
     }
+
+    @GetMapping("denied")
+    public String denied() {
+        return "denied";
+    }
 }
