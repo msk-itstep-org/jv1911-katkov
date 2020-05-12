@@ -30,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder authentication) throws Exception {
-        String userQuery = "SELECT username, password, 1 AS active FROM users WHERE username = ?";
+        String userQuery = "SELECT username, password, active FROM users WHERE username = ?";
         String roleQuery =
                 "SELECT u.username, ur.role "
                 + "FROM users u "
@@ -48,18 +48,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/registration").permitAll()
                 .antMatchers("/denied").permitAll()
-                .antMatchers("/admin/**").permitAll()
-//                .antMatchers("/admin/**").hasAnyAuthority(Role.ROLE_ADMIN.name())
-//                .antMatchers("/manager/**").hasAnyAuthority(Role.ROLE_MANAGER.name())
-                .anyRequest().permitAll();
+                .antMatchers("/").permitAll()
+                .antMatchers("/admin/**").hasAnyAuthority(Role.ROLE_ADMIN.name())
+                .antMatchers("/manager/**").hasAnyAuthority(Role.ROLE_MANAGER.name())
+                .anyRequest().authenticated();
 
         httpSecurity.csrf().disable();
 
         httpSecurity.formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/menu")
+                .defaultSuccessUrl("/")
                 .failureUrl("/denied")
                 .usernameParameter("username")
                 .passwordParameter("password");

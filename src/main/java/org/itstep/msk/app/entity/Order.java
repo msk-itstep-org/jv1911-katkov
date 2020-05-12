@@ -13,7 +13,7 @@ public class Order {
     private Long id;
 
     @Column(name = "order_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date orderDate;
 
     @Column(name = "active", nullable = false, columnDefinition = "BIT")
@@ -23,8 +23,17 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(targetEntity = OrderDish.class, mappedBy = "id")
+    @OneToMany(targetEntity = OrderDish.class, mappedBy = "order")
     private List<OrderDish> ordersDishes;
+
+    public Integer getDishesCount(){
+        Integer count = 0;
+        for (OrderDish orderDish : ordersDishes) {
+            count += orderDish.getQuantity();
+        }
+
+        return count;
+    }
 
     public Long getId() {
         return id;
@@ -52,6 +61,14 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }
 

@@ -48,35 +48,19 @@
                 <div class="col-3"></div>
             </div>
 
-            <div class="form-group row align-items-center col-12">
-                <div class="col-3"></div>
-                <div class="col-2">
-                    <label for="password"
-                           class="col-form-label col-form-label-lg">Пароль
-                    </label>
-                </div>
-                <div class="col-4">
-                    <input type="text"
-                           id="password"
-                           th:field="*{password}"
-                           class="form-control form-control-lg">
-                </div>>
-                <div class="col-3"></div>
-            </div>
-
             <div class="form-group row align-content-center col-12">
                 <div class="col-3"></div>
                 <div class="col-2 form-control-lg">Роли пользователя</div>
                 <div class="col-4">
-                    <div class="form-check" th:each="role : ${roles}">
+                    <div class="custom-control custom-switch" th:each="role : ${roles}">
                         <input th:id="${role}"
                                type="checkbox"
-                               class="form-check-input"
+                               class="custom-control-input"
                                th:disabled="${role.name} == 'Официант'"
                                th:field="*{stringRoles}"
                                th:value="${role}"/>
                         <label th:for="${role}"
-                               class="form-check-label form-control-lg"
+                               class="custom-control-label form-control-lg"
                                th:text="${role.name}">
                         </label>
                     </div>

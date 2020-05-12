@@ -22,15 +22,19 @@
             <td th:text="${ingredientStat.count}"></td>
             <td th:text="${ingredient.name}"></td>
             <td>
-                <a th:href="@{/admin/ingredient/return/{id}(id = ${ingredient.id})}">Восстановить</a>
+                <a th:href="@{/admin/ingredient/return/{id}(id = ${ingredient.id})}">
+                    <i class="fa fa-reply-all" aria-hidden="true"></i>
+                </a>
             </td>
             <td>
-                <a th:href="@{/admin/ingredient/finish-delete/{id}(id = ${ingredient.id})}">Удалить</a>
+                <a th:href="@{/admin/ingredient/finish-delete/{id}(id = ${ingredient.id})}">
+                    <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                </a>
             </td>
         </tr>
         </tbody>
     </table>
-    <a th:href="@{/admin/ingredient/add/}" class="btn btn-dark btn-lg" role="button">Добавить новый ингредиент</a>
+
     <br/>
     <br/>
     <nav>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Редактирование заказа')}"></head>
+<body>
+    <div class="container">
+        <div th:replace="~{fragments/header::header}"></div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <h2 th:text="${'Заказ №  ' + order.id}" class="text-center"></h2>
+        <h3 th:text="'создан ' + ${#dates.format(order.orderDate, 'HH:mm (dd.MM.yyyy)')}" class="text-center"></h3>
+        <br>
+        <table class="table table-bordered text-lg-center table-hover form-control-lg" align="center">
+            <thead class="thead-dark">
+            <tr>
+                <th>№</th>
+                <th>Наименование</th>
+                <th>Изображение блюда</th>
+                <th>Цена, руб.</th>
+                <th>Описание</th>
+                <th>Осталось порций</th>
+                <th>Заказано порций</th>
+            </tr>
+            </thead>
+            <tbody class="align-middle">
+            <tr th:each="orderDish : ${orderDishes}">
+                <td th:text="${orderDishStat.count}"></td>
+                <td th:text="${orderDish.dish.name}"></td>
+                <td>
+                    <img th:src="@{/upload/{uploadId}(uploadId=${orderDish.dish.dishPhoto.id})}"
+                         style="height: 150px; width: 200px"/>
+                </td>
+                <td th:text="${orderDish.dish.cost}"></td >
+                <td th:text="${orderDish.dish.description}"></td >
+                <td th:text="${dishCounts.get(orderDish.dish)}"></td>
+                <td>
+                    <form th:action="@{/main/edit/{orderId}(orderId = ${order.id})}" method="post" class="form-group">
+                        <input type="number"
+                               name="quantity"
+                               th:class="${errors.containsKey('quantity')
+                               ? 'form-control form-control-lg is-invalid'
+                               : 'form-control form-control-lg'}"
+                               th:value="${orderDish.quantity}"/>
+                        <ul th:if="${errors.containsKey('quantity')}">
+                            <li th:each="error : ${errors.get('quantity')}" th:text="${error}" style="color: darkred"></li>
+                        </ul>
+                        <input type="hidden" name="dishId" th:value="${orderDish.dish.id}"/>
+                        <br/>
+                        <button type="submit" class="btn btn-outline-success">Изменить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <br/>
+            <a class="btn btn-success btn-lg"
+               role="button"
+               th:href="@{/menu/{orderId}(orderId = ${order.id})}">Добавить блюдо</a>
+
+        <div th:replace="~{fragments/js-connect::js-connect}"></div>
+    </div>
+</body>

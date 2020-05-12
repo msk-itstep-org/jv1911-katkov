@@ -7,12 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 @Service
 public class PaginationServiceImpl implements PaginationService {
     @Override
-    public <T> void addToModelWithPagination(Model model, Page<T> items, Pageable pageable) {
+    public <T> void addToModelWithPagination (Model model, Page<T> items, Pageable pageable) {
         model.addAttribute("items", items.getContent());
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("pages", items.getTotalPages());

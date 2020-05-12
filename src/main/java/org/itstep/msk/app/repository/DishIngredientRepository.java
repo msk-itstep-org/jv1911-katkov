@@ -12,6 +12,4 @@ import java.util.List;
 public interface DishIngredientRepository extends JpaRepository<DishIngredient, Long> {
 
     List<DishIngredient> findAllByDish(Dish dish);
-
-
 }

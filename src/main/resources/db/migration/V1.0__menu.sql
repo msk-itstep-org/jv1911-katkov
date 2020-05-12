@@ -3,7 +3,6 @@ create table menu (
     name varchar(50) not null,
     parent_id int unsigned references menu (id),
     image varchar(255) not null
---     path varchar(255) null
 );
 
 INSERT INTO menu (id, name, image) VALUES ('1', 'Основное меню','/images/upload/mainMenu.jpg');

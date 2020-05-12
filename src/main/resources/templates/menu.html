@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="">
 <head>
-    <head th:replace="~{fragments/head::head('Авторизация')}"></head>
+    <head th:replace="~{fragments/head::head('Меню')}"></head>
 </head>
 <body>
     <div th:replace="~{fragments/header::header}"></div>
@@ -11,7 +11,7 @@
     <br/>
     <br/>
     <section th:insert="@{/category.html} :: category_fragment"
-         th:with="menu = ${roots}"
+         th:with="menu = ${roots}, order = ${order}"
     ></section>
 
     <div th:replace="~{fragments/js-connect::js-connect}"></div>

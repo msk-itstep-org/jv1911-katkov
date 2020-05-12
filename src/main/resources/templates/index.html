@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/head::head('Заказы')}"></head>
+<body>
+<div class="container">
+    <div th:replace="~{fragments/header::header}"></div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <table class="table table-bordered text-lg-center table-hover form-control-lg" align="center">
+        <thead class="thead-dark">
+        <tr>
+            <th>№ п/п</th>
+            <th>Дата заказа</th>
+            <th>Официант</th>
+            <th>Количество блюд</th>
+            <th>Редактировать</th>
+            <th>Оплачено</th>
+        </tr>
+        </thead>
+        <tbody class="align-middle">
+        <tr th:each="order : ${orders}">
+            <td th:text="${orderStat.count}"></td>
+            <td th:text="${#dates.format(order.orderDate, 'HH:mm (dd.MM.yyyy)')}"></td>
+            <td th:text="${order.user.username}"></td >
+            <td>
+                <a tabindex="0"
+                   th:attr="data-order-id=${order.id}"
+                   class="btn btn-lg btn-outline-success js-order-popover"
+                   role="button" data-toggle="popover">
+                   <span white-space="nowrap" th:text="${order.getDishesCount()}" class="badge badge-light"></span></a>
+            </td>
+
+            <td>
+                <a th:if="${order.user.username} == ${currentUsername}"
+                   th:href="@{/main/edit/{id}(id = ${order.id})}">
+                    <i style="color: black" class="fa fa-pencil-alt" aria-hidden="true"></i>
+                </a>
+                <span th:if="${order.user.username} != ${currentUsername}" style="color: firebrick">
+                   <i class="fa fa-times" aria-hidden="true"></i>
+                </span>
+            </td>
+            <td>
+                <a th:if="${order.user.username} == ${currentUsername}"
+                   th:href="@{/main/pay/{id}(id = ${order.id})}">
+                    <i style="color: black" class="fa fa-credit-card" aria-hidden="true"></i>
+                </a>
+                <span th:if="${order.user.username} != ${currentUsername}" style="color: firebrick">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/main/add}" class="btn btn-success btn-lg" role="button">Добавить новый заказ</a>
+    <br/>
+    <br/>
+    <div th:replace="~{fragments/js-connect::js-connect}"></div>
+
+    <script th:inline="javascript">
+        const orderDishData = [[${order_dishes}]];
+        const orderDishes = {};
+
+        for (let orderId in orderDishData) {
+            const list = $("<ul></ul>");
+
+            orderDishData[orderId].forEach(function (orderDish) {
+
+                const element = $("<li></li>");
+                element.text(orderDish).appendTo(list);
+            });
+
+            orderDishes[orderId] = list;
+        }
+
+        $(function () {
+            $(".js-order-popover").popover({
+                html: true,
+                title: "Список блюд",
+                trigger: "click hover",
+                content: function () {
+                    const orderId = $(this).attr("data-order-id");
+
+                    return orderDishes[orderId];
+                }
+            });
+        })
+    </script>
+</div>
+</body>

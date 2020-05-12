@@ -18,4 +18,6 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
     Page<Ingredient> findAllByActiveIsFalse(Pageable pageable);
 
     Ingredient findByName(String name);
+
+    List<Ingredient> findAllByActiveIsTrueOrderByName();
 }

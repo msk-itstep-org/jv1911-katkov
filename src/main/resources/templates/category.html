@@ -3,11 +3,16 @@
     <ul>
         <li th:each="category : ${menu}">
             <img th:src="${category.image}" class="js-image"/>
-            <a th:if="${category.children.empty}" th:href="@{/menu{path}(path = '/' + ${category.id})}">
-                <span th:text="${category.name} + '  >>>>>'">>'</span>
+            <a th:if="${category.children.empty}"
+               th:href="@{/menu/{orderId}/{menuId}((orderId = ${order.id}), menuId = ${category.id})}">
+                <span>          <img th:src="@{/images/upload/greenArrowLeft.jpg}" style="width: 50px"></span>
             </a>
+            <a th:unless="${category.children.empty}">
+                <span>          <img th:src="@{/images/upload/redArrow.jpg}" style="width: 50px"></span>
+            </a>
+            <div class="form-control-lg" th:text="${category.name}"></div>
             <section th:insert="@{/category.html} :: category_fragment"
-                     th:with="menu = ${category.children}"
+                     th:with="menu = ${category.children}, order = ${order}"
                      th:if="!${category.children.empty}"
             ></section>
         </li>

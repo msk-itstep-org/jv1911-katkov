@@ -4,7 +4,6 @@ import org.itstep.msk.app.entity.User;
 import org.itstep.msk.app.enums.Role;
 import org.itstep.msk.app.repository.UserRepository;
 import org.itstep.msk.app.service.MyBCryptPasswordEncoder;
-import org.itstep.msk.app.service.ValidationMessagesService;
 import org.itstep.msk.app.service.impl.PaginationServiceImpl;
 import org.itstep.msk.app.service.impl.ValidationMessagesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +54,7 @@ public class UserController {
             Model model
     ) {
         Page<User> users = userRepository.findAllByActiveIsFalse(pageable);
-        paginationService.addToModelWithPagination(model, users, pageable);
+       paginationService.addToModelWithPagination(model, users, pageable);
 
         return "admin/user/archive";
     }
@@ -90,7 +88,7 @@ public class UserController {
 
         if (bindingResult.hasErrors()) {
             Map<String, List<String>> errors = new HashMap<>();
-            validationMessagesService.createValidationMesages(bindingResult, errors);
+            validationMessagesService.createValidationMessages(bindingResult, errors);
 
             newUser.getRoles().add(Role.ROLE_WAITER);
 
@@ -134,31 +132,17 @@ public class UserController {
     ) {
         User sameMail = userRepository.findByEmail(editedUser.getEmail());
         if (sameMail != null && !user.getEmail().equals(editedUser.getEmail())) {
-            System.out.println("First");
             bindingResult.addError(
                     new FieldError("editedUser", "email", "Пользователь с таким адресом электронной почты уже существует")
             );
         }
 
         if (bindingResult.hasErrors()) {
-            System.out.println("Second");
             Map<String, List<String>> errors = new HashMap<>();
-            validationMessagesService.createValidationMesages(bindingResult, errors);
+            validationMessagesService.createValidationMessages(bindingResult, errors);
 
-            if (editedUser.getUsername().equals("admin")) {
-                editedUser.getRoles().add(Role.ROLE_ADMIN);
-            }
+            checkAndCreatenewUser(user, editedUser);
 
-            user.setUsername(editedUser.getUsername());
-            user.setPassword(editedUser.getPassword());
-            user.setEmail(editedUser.getEmail());
-            user.getRoles().clear();
-            for (Role role : editedUser.getRoles()) {
-                user.getRoles().add(role);
-            }
-            user.getRoles().add(Role.ROLE_WAITER);
-
-            System.out.println("Third");
             model.addAttribute("errors", errors);
             model.addAttribute("user", user);
             model.addAttribute("roles", Role.values());
@@ -166,20 +150,7 @@ public class UserController {
             return "admin/user/edit/" + user.getId();
         }
 
-
-
-        if (editedUser.getUsername().equals("admin")) {
-            editedUser.getRoles().add(Role.ROLE_ADMIN);
-        }
-
-        user.setUsername(editedUser.getUsername());
-        user.setPassword(editedUser.getPassword());
-        user.setEmail(editedUser.getEmail());
-        user.getRoles().clear();
-        for (Role role : editedUser.getRoles()) {
-            user.getRoles().add(role);
-        }
-        user.getRoles().add(Role.ROLE_WAITER);
+        checkAndCreatenewUser(user, editedUser);
 
         userRepository.save(user);
         userRepository.flush();
@@ -228,5 +199,20 @@ public class UserController {
         userRepository.flush();
 
         return "redirect:/admin/user/archive";
+    }
+
+    private void checkAndCreatenewUser(User user, User editedUser) {
+        if (editedUser.getUsername().equals("admin")) {
+            editedUser.getRoles().add(Role.ROLE_ADMIN);
+        }
+
+        user.setUsername(editedUser.getUsername());
+        user.setPassword(editedUser.getPassword());
+        user.setEmail(editedUser.getEmail());
+        user.getRoles().clear();
+        for (Role role : editedUser.getRoles()) {
+            user.getRoles().add(role);
+        }
+        user.getRoles().add(Role.ROLE_WAITER);
     }
 }

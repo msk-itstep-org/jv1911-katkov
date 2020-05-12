@@ -18,12 +18,7 @@ public class Dish {
     @Column(length = 100)
     private String name;
 
-    @Column(length = 100)
-    private String photo;
-
-    @NotEmpty
     @Max(value = 100000, message = "Стоимость блюда превышает 100000!!!")
-    @Pattern(regexp = "[\\d]+", message = "Название блюда должно содержать только цифры")
     @Column
     private Integer cost;
 
@@ -59,14 +54,6 @@ public class Dish {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 
     public Integer getCost() {

@@ -30,10 +30,14 @@
                 </ul>
             </td>
             <td>
-                <a th:href="@{/admin/user/edit/{id}(id = ${user.id})}">Редактировать</a>
+                <a th:href="@{/admin/user/edit/{id}(id = ${user.id})}">
+                    <i style="color: black" class="fa fa-pencil-alt" aria-hidden="true"></i>
+                </a>
             </td>
             <td>
-                <a th:href="@{/admin/user/delete/{id}(id = ${user.id})}">Удалить</a>
+                <a th:href="@{/admin/user/delete/{id}(id = ${user.id})}">
+                    <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                </a>
             </td>
         </tr>
         </tbody>

@@ -12,44 +12,20 @@
         <thead class="thead-dark">
         <tr>
             <th>№</th>
-            <th>Наименование</th>
-            <th>Категория</th>
-            <th>Фото</th>
-            <th>Цена</th>
-            <th>Описание</th>
-            <th>Ингредиенты</th>
-            <th>Редактировать</th>
+            <th>Ингредиент</th>
+            <th>Срок годности</th>
+            <th>Количество</th>
             <th>Удалить</th>
         </tr>
         </thead>
         <tbody class="align-middle">
-        <tr th:each="dish : ${items}">
-            <td th:text="${dishStat.count} + ${page} * ${pageValue}"></td>
-            <td th:text="${dish.name}"></td>
-            <td th:text="${dish.menu.name}"></td >
+        <tr th:each="ingredientStorage : ${items}">
+            <td th:text="${ingredientStorageStat.count} + ${page} * ${pageValue}"></td>
+            <td th:text="${ingredientStorage.ingredient.name}"></td>
+            <td th:text="${#dates.format(ingredientStorage.receiptDate, 'dd.MM.yyyy')}"></td >
+            <td th:text="${ingredientStorage.quantity}"></td >
             <td>
-                <img
-                    th:if="${dish.dishPhoto != null}"
-                    th:src="@{/upload/{uploadId}(uploadId=${dish.dishPhoto.id})}"
-                    style="height: 150px; width: 200px"
-                />
-            </td >
-            <td th:text="${dish.cost}"></td >
-            <td th:text="${dish.description}"></td >
-            <td>
-                <a tabindex="0"
-                   th:attr="data-dish-id=${dish.id}"
-                   class="btn btn-lg btn-outline-success js-dish-popover"
-                   role="button" data-toggle="popover">
-                   <span th:text="${dish.dishesIngredients.size()}" class="badge badge-light"></span></a>
-            </td>
-            <td>
-                <a th:href="@{/admin/dish/edit/{id}(id = ${dish.id})}">
-                    <i style="color: black" class="fa fa-pencil-alt" aria-hidden="true"></i>
-                </a>
-            </td>
-            <td>
-                <a th:href="@{/admin/dish/delete/{id}(id = ${dish.id})}">
+                <a th:href="@{/manager/delete/{id}(id = ${ingredientStorage.id})}">
                     <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
                 </a>
             </td>
@@ -57,19 +33,19 @@
          </tbody>
     </table>
     </br>
-    <a th:href="@{/admin/dish/add/}" class="btn btn-dark btn-lg" role="button">Добавить новое блюдо</a>
+    <a th:href="@{/manager/add/}" class="btn btn-dark btn-lg" role="button">Добавить новый ингредиент</a>
     <br/>
     <br/>
     <nav>
         <ul class="pagination pagination-lg">
             <li th:class="${page == 0 ? 'page-item disabled' : 'page-item'}">
-                <a th:href="@{/admin/dish/start(page=${page - 1})}" class="page-link">&laquo;</a>
+                <a th:href="@{/manager/start(page=${page - 1})}" class="page-link">&laquo;</a>
             </li>
             <li th:each="p : ${pagesRange}" th:class="${p == page ? 'page-item active' : 'page-item'}">
-                <a th:href="@{/admin/dish/start(page=${p})}" class="page-link" th:text="${p + 1}">12</a>
+                <a th:href="@{/manager/start(page=${p})}" class="page-link" th:text="${p + 1}">12</a>
             </li>
             <li th:class="${page == pages - 1 ? 'page-item disabled' : 'page-item'}">
-                <a th:href="@{/admin/dish/start(page=${page + 1})}" class="page-link">&raquo;</a>
+                <a th:href="@{/manager/start(page=${page + 1})}" class="page-link">&raquo;</a>
             </li>
         </ul>
     </nav>

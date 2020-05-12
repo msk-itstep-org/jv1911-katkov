@@ -15,7 +15,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +75,7 @@ public class IngredientController {
         if (bindingResult.hasErrors()) {
             Map<String, List<String>> errors = new HashMap<>();
 
-            validationMessagesService.createValidationMesages(bindingResult, errors);
+            validationMessagesService.createValidationMessages(bindingResult, errors);
 
             model.addAttribute("errors", errors);
             model.addAttribute("newIngredient", newIngredient);

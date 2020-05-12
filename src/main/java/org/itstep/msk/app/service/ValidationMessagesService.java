@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface ValidationMessagesService {
 
-    void createValidationMesages(BindingResult bindingResult, Map<String, List<String>> errors);
+    void createValidationMessages(BindingResult bindingResult, Map<String, List<String>> errors);
 }

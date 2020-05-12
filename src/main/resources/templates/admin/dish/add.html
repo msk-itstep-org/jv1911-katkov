@@ -13,7 +13,7 @@
                 <div class="col-3"></div>
                 <div class="col-2">
                     <label for="name"
-                           class="col-form-label">Наименование
+                           class="col-form-label col-form-label-lg">Наименование
                     </label>
                 </div>
                 <div class="col-4">
@@ -35,7 +35,7 @@
                 <div class="col-3"></div>
                 <div class="col-2">
                     <label for="cost"
-                           class="col-2 col-form-label">Цена
+                           class="col-2 col-form-label col-form-label-lg">Цена
                     </label>
                 </div>
                 <div class="col-4">
@@ -57,7 +57,7 @@
                 <div class="col-3"></div>
                 <div class="col-2">
                     <label for="description"
-                           class="col-form-label">Описание
+                           class="col-form-label col-form-label-lg">Описание
                     </label>
                 </div>
                 <div class="col-4">
@@ -79,11 +79,14 @@
                 <div class="col-3"></div>
                 <div class="col-2">
                     <label for="menu"
-                           class="col-form-label">Категория
+                           class="col-form-label col-form-label-lg">Категория
                     </label>
                 </div>
                 <div class="col-4">
-                    <select name="menu" id="menu" class="form-control">
+                    <select name="menu" id="menu"
+                           th:class="${errors.containsKey('menu')
+                           ? 'form-control form-control-lg is-invalid'
+                           : 'form-control form-control-lg'}">
                         <option value="" disabled selected>Выберете категорию</option>
                         <option
                                 th:each="category : ${menu}"
@@ -91,13 +94,16 @@
                                 th:text="${category.name}"
                         ></option>
                     </select>
+                    <ul th:if="${errors.containsKey('menu')}">
+                        <li th:each="error : ${errors.get('description')}" th:text="${error}" style="color: darkred"></li>
+                    </ul>
                 </div>
                 <div class="col-3"></div>
             </div>
 
             <div class="form-group row align-items-center">
                 <div class="col-4"></div>
-                    <button type="submit" class="btn btn-dark col-4">Добавить</button>
+                    <button type="submit" class="btn btn-lg btn-dark col-4">Добавить</button>
                 <div class="col-4"></div>
             </div>
         </form>

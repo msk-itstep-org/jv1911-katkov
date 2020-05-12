@@ -1,7 +1,6 @@
 create table dishes (
     id int unsigned unique not null auto_increment primary key,
     name varchar(100) not null unique,
-    photo varchar(100) null,
     cost int not null,
     description varchar(255) null,
     active bit default true,
@@ -19,7 +18,7 @@ create table dishes_ingredients (
     id int unsigned unique not null auto_increment primary key,
     dishes_id int unsigned not null references dishes (id),
     ingredients_id int unsigned not null references ingredients (id),
-    weight double not null
+    weight int not null
 );
 
 create table uploads (
@@ -30,22 +29,22 @@ create table uploads (
 );
 
 insert into dishes
-(`id`, `name`, `photo`, `cost`, `description`, `menu_id`, photo_id)
+(`id`, `name`, `cost`, `description`, `menu_id`, photo_id)
 values
-(1, 'Бекон с сыром в духовке', '/images/upload/dishesMain/hotSnakes/Бекон с сыром в духовке.jpg', '250', 'Яго-го', '6', 5),
-(2, 'Жульен с курицей в тарталетках', '/images/upload/dishesMain/hotSnakes/Жульен с курицей в тарталетках.jpg', '230', 'Вово', '6', 6),
-(3, 'Закуска из баклажан пикантная', '/images/upload/dishesMain/hotSnakes/Закуска из баклажан пикантная.jpg', '200', 'Бакл', '6', 7),
-(4, 'Креветки в кляре', '/images/upload/dishesMain/hotSnakes/Креветки в кляре.jpg', '270', 'Вакл', '6', 8),
-(5, 'Свиные ребрышки на сковороде', '/images/upload/dishesMain/hotSnakes/Свиные ребрышки на сковороде.jpg', '300', 'Закл', '6', 9),
-(6, 'Сырные палочки', '/images/upload/dishesMain/hotSnakes/Сырные палочки.jpg', '150', 'Дакл', '6', 10);
+(1, 'Бекон с сыром в духовке', '250', 'Пальчики оближешь', '6', 5),
+(2, 'Жульен с курицей в тарталетках', '230', 'Самое то!', '6', 6),
+(3, 'Закуска из баклажан пикантная', '200', 'Осторожно, осторое', '6', 7),
+(4, 'Креветки в кляре', '270', 'Такие только у нас', '6', 8),
+(5, 'Свиные ребрышки на сковороде', '300', 'Блаженство', '6', 9),
+(6, 'Сырные палочки', '150', 'Идеальная закуска к пиву', '6', 10);
 
 insert into dishes
-(`id`, `name`, `photo`, `cost`, `description`, `menu_id`, photo_id)
+(`id`, `name`, `cost`, `description`, `menu_id`, photo_id)
 values
-(7, 'Буйабес', '/images/upload/dishesMain/soups/Буйабес.jpg', '320', 'Супец с креветкой', '7', 1),
-(8, 'Свекольник с мясом', '/images/upload/dishesMain/soups/Свекольник с мясом.jpg', '230', 'Мясцо', '7', 2),
-(9, 'Сырный суп пюре с курицей', '/images/upload/dishesMain/soups/Сырный суп пюре с курицей.jpg', '250', 'Куре', '7', 3),
-(10, 'Турецкий суп с булгуром', '/images/upload/dishesMain/soups/Турецкий суп с булгуром.jpg', '300', 'Ваще', '7', 4);
+(7, 'Буйабес', '320', 'Суп с морепродуктами', '7', 1),
+(8, 'Свекольник с мясом', '230', 'Настоящий мясной суп', '7', 2),
+(9, 'Сырный суп пюре с курицей', '250', 'Лучшее сочетание', '7', 3),
+(10, 'Турецкий суп с булгуром', '300', 'Такого Вы еще не пробовали', '7', 4);
 
 insert into uploads
 (id, filename, original_filename, content_type)
@@ -70,6 +69,7 @@ values
 (4, 'Креветки'),
 (5, 'Лук'),
 (6, 'Сельдерей'),
+(7, 'Шпинат'),
 (8, 'Специи сухие'),
 (9, 'Масло растительное'),
 (10, 'Сыр плавленный'),
@@ -89,6 +89,7 @@ values
 (24, 'Булгур'),
 (25, 'Чечевица красная'),
 (26, 'Помидоры'),
+(27, 'Кокос'),
 (28, 'Лук зеленый'),
 (29, 'Яйца'),
 (30, 'Мука пшеничная'),

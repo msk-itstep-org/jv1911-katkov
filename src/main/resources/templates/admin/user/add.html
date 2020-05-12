@@ -62,7 +62,7 @@
                 </div>
                 <div class="col-4">
                 <input id="password"
-                       type="text"
+                       type="password"
                        th:field="*{password}"
                        th:class="${errors.containsKey('password')
                            ? 'form-control form-control-lg is-invalid'
@@ -79,15 +79,15 @@
                 <div class="col-3"></div>
                 <div class="col-2 form-control-lg">Роли пользователя</div>
                 <div class="col-4">
-                    <div class="form-check" th:each="role : ${roles}">
+                    <div class="custom-control custom-switch" th:each="role : ${roles}">
                         <input th:id="${role}"
                                type="checkbox"
-                               class="form-check-input"
+                               class="custom-control-input"
                                th:disabled="${role.name} == 'Официант'"
                                th:field="*{stringRoles}"
                                th:value="${role}"/>
                         <label th:for="${role}"
-                               class="form-check-label form-control-lg"
+                               class="custom-control-label form-control-lg"
                                th:text="${role.name}">
                         </label>
                     </div>
