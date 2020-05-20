@@ -130,13 +130,6 @@ public class UserController {
             BindingResult bindingResult,
             Model model
     ) {
-        User sameMail = userRepository.findByEmail(editedUser.getEmail());
-        if (sameMail != null && !user.getEmail().equals(editedUser.getEmail())) {
-            bindingResult.addError(
-                    new FieldError("editedUser", "email", "Пользователь с таким адресом электронной почты уже существует")
-            );
-        }
-
         if (bindingResult.hasErrors()) {
             Map<String, List<String>> errors = new HashMap<>();
             validationMessagesService.createValidationMessages(bindingResult, errors);
@@ -147,6 +140,8 @@ public class UserController {
             model.addAttribute("user", user);
             model.addAttribute("roles", Role.values());
 
+            System.out.println("error");
+
             return "admin/user/edit/" + user.getId();
         }
 
@@ -154,8 +149,9 @@ public class UserController {
 
         userRepository.save(user);
         userRepository.flush();
+        System.out.println("redirect");
 
-        return "redirect:/admin/user/edit/" + user.getId();
+        return "redirect:/admin/user/start";
     }
 
     @GetMapping("/delete/{id}")

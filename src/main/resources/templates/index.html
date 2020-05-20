@@ -20,7 +20,7 @@
         </tr>
         </thead>
         <tbody class="align-middle">
-        <tr th:each="order : ${orders}">
+        <tr th:each="order : ${orders}" >
             <td th:text="${orderStat.count}"></td>
             <td th:text="${#dates.format(order.orderDate, 'HH:mm (dd.MM.yyyy)')}"></td>
             <td th:text="${order.user.username}"></td >

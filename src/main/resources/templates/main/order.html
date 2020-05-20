@@ -33,7 +33,7 @@
                 <td th:text="${dish.description}"></td>
                 <td th:text="${dishCounts.get(dish)}"></td>
                 <td>
-                    <form th:action="@{/main/add-to-order/{orderId}(orderId = ${order.id})}"
+                    <form th:action="@{/menu/add-to-order/{orderId}(orderId = ${order.id})}"
                           id="order-form"
                           method="post"
                           class="form-group">
@@ -56,27 +56,6 @@
         <br/>
         <div th:replace="~{fragments/js-connect::js-connect}"></div>
     </div>
-
-    <!--<script>-->
-        <!--$("#order-form").submit(function (event) {-->
-            <!--event.preventDefault();-->
-            <!--const formUrl = $("#order-form").attr("action");-->
-            <!--$.ajax({-->
-                <!--url: formUrl,-->
-                <!--method: "POST",-->
-                <!--dataType: "json",-->
-                <!--contentType: "application/json; charset=UTF-8",-->
-                <!--success: function (response) {-->
-
-                <!--},-->
-                <!--error: function () {-->
-                    <!--alert("Что-то пошло не так");-->
-                <!--}-->
-            <!--});-->
-            <!--return false;-->
-        <!--});-->
-    <!--</script>-->
-
 </body>
 </html>
 
