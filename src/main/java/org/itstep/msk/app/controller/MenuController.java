@@ -57,7 +57,7 @@ public class MenuController {
         return "main/order";
     }
 
-        @PostMapping("/main/add-to-order/{id}")
+        @PostMapping("/menu/add-to-order/{id}")
     private String addToOrder(
             @PathVariable(name = "id") Order order,
             @RequestParam String dishId,
